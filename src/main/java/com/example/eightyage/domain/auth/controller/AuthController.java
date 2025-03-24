@@ -1,16 +1,16 @@
 package com.example.eightyage.domain.auth.controller;
 
+import com.example.eightyage.domain.auth.dto.request.AuthSigninRequestDto;
 import com.example.eightyage.domain.auth.dto.request.AuthSignupRequestDto;
 import com.example.eightyage.domain.auth.dto.response.AuthAccessTokenResponseDto;
 import com.example.eightyage.domain.auth.dto.response.AuthTokensResponseDto;
 import com.example.eightyage.domain.auth.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,10 +23,23 @@ public class AuthController {
     /* 회원가입 */
     @PostMapping("/v1/auth/signup")
     public AuthAccessTokenResponseDto signup(
-            @RequestBody AuthSignupRequestDto request,
+            @Valid @RequestBody AuthSignupRequestDto request,
             HttpServletResponse httpServletResponse
     ) {
         AuthTokensResponseDto tokensResponseDto = authService.signup(request);
+
+        setRefreshTokenCookie(httpServletResponse, tokensResponseDto.getRefreshToken());
+
+        return new AuthAccessTokenResponseDto(tokensResponseDto.getAccessToken());
+    }
+
+    /* 로그인 */
+    @PostMapping("/v1/auth/signin")
+    public AuthAccessTokenResponseDto signin(
+            @Valid @RequestBody AuthSigninRequestDto request,
+            HttpServletResponse httpServletResponse
+    ) {
+        AuthTokensResponseDto tokensResponseDto = authService.signin(request);
 
         setRefreshTokenCookie(httpServletResponse, tokensResponseDto.getRefreshToken());
 
