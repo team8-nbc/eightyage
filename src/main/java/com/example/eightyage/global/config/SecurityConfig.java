@@ -1,5 +1,6 @@
 package com.example.eightyage.global.config;
 
+import com.example.eightyage.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

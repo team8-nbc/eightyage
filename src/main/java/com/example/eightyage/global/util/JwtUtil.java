@@ -1,4 +1,4 @@
-package com.example.eightyage.global.config;
+package com.example.eightyage.global.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

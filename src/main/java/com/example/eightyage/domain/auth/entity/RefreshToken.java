@@ -17,14 +17,14 @@ public class RefreshToken {
 
     private Long userId;
 
-    private String RefreshToken;
+    private String token;
 
     @Enumerated(EnumType.STRING)
     private TokenState tokenState;
 
     public RefreshToken(Long userId) {
         this.userId = userId;
-        this.RefreshToken = UUID.randomUUID().toString();
+        this.token = UUID.randomUUID().toString();
         this.tokenState = TokenState.VALID;
     }
 

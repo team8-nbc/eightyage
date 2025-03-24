@@ -1,6 +1,8 @@
-package com.example.eightyage.global.config;
+package com.example.eightyage.global.filter;
 
 import com.example.eightyage.domain.user.entity.UserRole;
+import com.example.eightyage.global.config.JwtAuthenticationToken;
+import com.example.eightyage.global.util.JwtUtil;
 import com.example.eightyage.global.dto.AuthUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

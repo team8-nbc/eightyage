@@ -4,7 +4,7 @@ import com.example.eightyage.domain.auth.entity.RefreshToken;
 import com.example.eightyage.domain.auth.repository.RefreshTokenRepository;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.domain.user.service.UserService;
-import com.example.eightyage.global.config.JwtUtil;
+import com.example.eightyage.global.util.JwtUtil;
 import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class TokenService {
     /* Refresh Token 생성 */
     public String createRefreshToken(User user) {
         RefreshToken refreshToken = refreshTokenRepository.save(new RefreshToken(user.getId()));
-        return refreshToken.getRefreshToken();
+        return refreshToken.getToken();
     }
 
     /* Refresh Token 유효성 검사 */
@@ -45,7 +45,7 @@ public class TokenService {
     }
 
     private RefreshToken findByTokenOrElseThrow(String token) {
-        return refreshTokenRepository.findByRefreshToken(token).orElseThrow(
+        return refreshTokenRepository.findByToken(token).orElseThrow(
                 () -> new NotFoundException("리프레시 토큰을 찾을 수 없습니다."));
     }
 }

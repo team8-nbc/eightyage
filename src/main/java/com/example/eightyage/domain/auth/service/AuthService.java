@@ -2,7 +2,6 @@ package com.example.eightyage.domain.auth.service;
 
 import com.example.eightyage.domain.auth.dto.request.AuthSigninRequestDto;
 import com.example.eightyage.domain.auth.dto.request.AuthSignupRequestDto;
-import com.example.eightyage.domain.auth.dto.response.AuthAccessTokenResponseDto;
 import com.example.eightyage.domain.auth.dto.response.AuthTokensResponseDto;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.domain.user.service.UserService;
