@@ -1,0 +1,40 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Build
+/build/
+out/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+
+# Test
+/test-output/
+
+# H2 DB file
+*.mv.db
+*.h2.db
+
+# Environment
+.env
+
+# Spring Boot application properties/yaml
+application-*.yml
+application-*.properties
+
+# AWS config
+.aws/
