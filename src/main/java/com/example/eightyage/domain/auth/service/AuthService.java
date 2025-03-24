@@ -45,6 +45,14 @@ public class AuthService {
         return getTokenResponse(user);
     }
 
+    /* Access Token, Refresh Token 재발급 */
+    @Transactional
+    public AuthTokensResponseDto reissueAccessToken(String refreshToken) {
+        User user = tokenService.reissueToken(refreshToken);
+
+        return getTokenResponse(user);
+    }
+
     /* Access Token, Refresh Token 생성 및 저장 */
     private AuthTokensResponseDto getTokenResponse(User user) {
 

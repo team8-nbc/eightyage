@@ -5,6 +5,7 @@ import com.example.eightyage.domain.auth.dto.request.AuthSignupRequestDto;
 import com.example.eightyage.domain.auth.dto.response.AuthAccessTokenResponseDto;
 import com.example.eightyage.domain.auth.dto.response.AuthTokensResponseDto;
 import com.example.eightyage.domain.auth.service.AuthService;
+import com.example.eightyage.global.annotation.RefreshToken;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -40,6 +41,19 @@ public class AuthController {
             HttpServletResponse httpServletResponse
     ) {
         AuthTokensResponseDto tokensResponseDto = authService.signin(request);
+
+        setRefreshTokenCookie(httpServletResponse, tokensResponseDto.getRefreshToken());
+
+        return new AuthAccessTokenResponseDto(tokensResponseDto.getAccessToken());
+    }
+
+    /* 토큰 재발급 (로그인 기간 연장) */
+    @GetMapping("/v1/auth/refresh")
+    public AuthAccessTokenResponseDto refresh(
+            @RefreshToken String refreshToken,
+            HttpServletResponse httpServletResponse
+    ) {
+        AuthTokensResponseDto tokensResponseDto = authService.reissueAccessToken(refreshToken);
 
         setRefreshTokenCookie(httpServletResponse, tokensResponseDto.getRefreshToken());
 

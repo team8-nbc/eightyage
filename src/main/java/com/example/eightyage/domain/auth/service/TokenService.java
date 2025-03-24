@@ -5,6 +5,7 @@ import com.example.eightyage.domain.auth.repository.RefreshTokenRepository;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.domain.user.service.UserService;
 import com.example.eightyage.global.config.JwtUtil;
+import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,32 +31,21 @@ public class TokenService {
         return refreshToken.getRefreshToken();
     }
 
-//    /* Refresh Token 만료 */
-//    public void revokeRefreshToken(Long userId) {
-//        RefreshToken refreshToken = findRefreshTokenById(userId);
-//        refreshToken.updateTokenStatus(INVALIDATED);
-//    }
-//
-//    /* Refresh Token 유효성 검사 */
-//    public User reissueToken(String token) {
-//
-//        RefreshToken refreshToken = findByTokenOrElseThrow(token);
-//
-//        if (refreshToken.getTokenState() == INVALIDATED) {
-//            throw new UnauthorizedException("사용이 만료된 refresh token 입니다.");
-//        }
-//        refreshToken.updateTokenStatus(INVALIDATED);
-//
-//        return userService.findUserByIdOrElseThrow(refreshToken.getUserId());
-//    }
-//
-//    private RefreshToken findByTokenOrElseThrow(String token) {
-//        return refreshTokenRepository.findByToken(token).orElseThrow(
-//                () -> new NotFoundException("Not Found Token"));
-//    }
-//
-//    private RefreshToken findRefreshTokenById(Long userId) {
-//        return refreshTokenRepository.findById(userId).orElseThrow(
-//                () -> new NotFoundException("Not Found Token"));
-//    }
+    /* Refresh Token 유효성 검사 */
+    public User reissueToken(String token) {
+
+        RefreshToken refreshToken = findByTokenOrElseThrow(token);
+
+        if (refreshToken.getTokenState() == INVALIDATED) {
+            throw new UnauthorizedException("사용이 만료된 refresh token 입니다.");
+        }
+        refreshToken.updateTokenStatus(INVALIDATED);
+
+        return userService.findUserByIdOrElseThrow(refreshToken.getUserId());
+    }
+
+    private RefreshToken findByTokenOrElseThrow(String token) {
+        return refreshTokenRepository.findByRefreshToken(token).orElseThrow(
+                () -> new NotFoundException("리프레시 토큰을 찾을 수 없습니다."));
+    }
 }

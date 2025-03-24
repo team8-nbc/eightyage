@@ -3,6 +3,7 @@ package com.example.eightyage.domain.user.service;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.domain.user.repository.UserRepository;
 import com.example.eightyage.global.exception.BadRequestException;
+import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,12 @@ public class UserService {
     public User findUserByEmailOrElseThrow(String email) {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new UnauthorizedException("가입한 유저의 이메일이 아닙니다.")
+        );
+    }
+
+    public User findUserByIdOrElseThrow(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("해당 유저의 Id를 찾을 수 없습니다.")
         );
     }
 }
