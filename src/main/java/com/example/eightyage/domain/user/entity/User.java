@@ -1,4 +1,4 @@
-package com.example.eightyage.domain.auth.entity;
+package com.example.eightyage.domain.user.entity;
 
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
@@ -24,4 +24,10 @@ public class User extends TimeStamped {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    public User(String email, String nickname, String password) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.userRole = UserRole.ROLE_USER;
+    }
 }

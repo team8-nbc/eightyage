@@ -1,6 +1,6 @@
 package com.example.eightyage.global.dto;
 
-import com.example.eightyage.domain.auth.entity.UserRole;
+import com.example.eightyage.domain.user.entity.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
