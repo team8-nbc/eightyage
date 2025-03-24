@@ -1,0 +1,35 @@
+name: "🐞 Bug Report"
+description: "버그 신고용 템플릿입니다."
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: 📄 버그 설명
+      description: 어떤 문제가 발생했는지 자세히 적어주세요.
+      placeholder: 예시) 로그인 버튼을 눌렀는데 반응이 없습니다.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 🪛 재현 방법
+      description: 버그를 어떻게 재현할 수 있는지 단계별로 알려주세요.
+      placeholder: |
+        1. 페이지 접속
+        2. 로그인 버튼 클릭
+        3. 아무 반응 없음
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ✅ 기대 동작
+      description: 원래 어떻게 동작했어야 하는지 작성해주세요.
+      placeholder: 로그인 성공 후 대시보드로 이동해야 합니다.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 📎 참고 자료 (스크린샷 등)
+      description: 필요하다면 이미지, 로그 등 추가해주세요.
