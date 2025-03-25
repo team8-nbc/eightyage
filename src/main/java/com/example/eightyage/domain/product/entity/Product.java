@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name="products")
+@Table(name = "product")
 public class Product extends TimeStamped {
 
     @Id

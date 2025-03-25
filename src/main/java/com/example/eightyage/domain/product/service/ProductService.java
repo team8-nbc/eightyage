@@ -34,9 +34,7 @@ public class ProductService {
     // 제품 수정
     @Transactional
     public ProductUpdateResponseDto updateProduct(Long productId, String productName, Category category, String content, SaleState saleState, Integer price) {
-        Product findProduct = productRepository.findById(productId).orElseThrow(
-                () -> new NotFoundException("존재하지 않는 상품입니다.")
-        );
+        Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
 
         if(productName != null) findProduct.setName(productName);
         if(category != null) findProduct.setCategory(category);
@@ -50,9 +48,7 @@ public class ProductService {
     // 제품 단건 조회
     @Transactional(readOnly = true)
     public ProductGetResponseDto findProductById(Long productId) {
-        Product findProduct = productRepository.findById(productId).orElseThrow(
-                () -> new NotFoundException("존재하지 않는 상품입니다.")
-        );
+        Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
 
         return new ProductGetResponseDto(findProduct.getName(), findProduct.getContent(), findProduct.getCategory(), findProduct.getPrice(), findProduct.getSaleState(), findProduct.getCreatedAt(), findProduct.getModifiedAt());
     }
@@ -60,9 +56,7 @@ public class ProductService {
     // 제품 삭제
     @Transactional
     public void deleteProduct(Long productId) {
-        Product findProduct = productRepository.findById(productId).orElseThrow(
-                () -> new NotFoundException("존재하지 않는 상품입니다.")
-        );
+        Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
 
         findProduct.setDeletedAt(LocalDateTime.now());
     }
