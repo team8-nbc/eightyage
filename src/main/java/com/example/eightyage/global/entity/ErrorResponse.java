@@ -3,21 +3,26 @@ package com.example.eightyage.global.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ErrorResponse {
+public class ErrorResponse<T> {
 
     private String status;
 
     private Integer code;
 
-    private String message;
+    private T message;
 
-    public ErrorResponse(String statusName, Integer code, String message) {
-        this.status = statusName;
-        this.code = code;
+    public ErrorResponse(HttpStatus httpStatus, T message) {
+        this.status = httpStatus.name();
+        this.code = httpStatus.value();
         this.message = message;
+    }
+
+    public static <T> ErrorResponse<T> of(HttpStatus httpStatus, T message) {
+        return new ErrorResponse<>(httpStatus, message);
     }
 }
