@@ -13,7 +13,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:8.0        # MySQL 컨테이너 띄우기
         env:
           MYSQL_ROOT_PASSWORD: root        # Docker 내부 비밀번호 지정
           MYSQL_DATABASE: team8_test       # Docker 내부 DB 이름
@@ -44,7 +44,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Run Test with Gradle
+      - name: Test And Build with Gradle
         env:
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-        run: ./gradlew clean test -Dspring.profiles.active=ci
+        run: ./gradlew clean build -Dspring.profiles.active=ci
