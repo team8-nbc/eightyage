@@ -111,12 +111,13 @@ public class UserServiceTest {
         String email = "email@email.com";
         String nickname = "nickname";
         String password = "password1234";
+        String userRole = "USER_ROLE";
 
         given(userRepository.existsByEmail(any(String.class))).willReturn(true);
 
         // when & then
         assertThrows(BadRequestException.class,
-                () -> userService.saveUser(email, nickname, password),
+                () -> userService.saveUser(email, nickname, password, userRole),
                 "등록된 이메일입니다.");
     }
 
@@ -126,7 +127,8 @@ public class UserServiceTest {
         String email = "email@email.com";
         String nickname = "nickname";
         String password = "password1234";
-        User user = new User(email, nickname, password);
+        String userRole = "ROLE_USER";
+        User user = new User(email, nickname, password, UserRole.ROLE_USER);
 
         String encodedPassword = "encoded-password1234";
 
@@ -135,7 +137,7 @@ public class UserServiceTest {
         given(userRepository.save(any(User.class))).willReturn(user);
 
         // when
-        User resultUser = userService.saveUser(email, nickname, password);
+        User resultUser = userService.saveUser(email, nickname, password, userRole);
 
         // then
         assertNotNull(resultUser);

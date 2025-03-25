@@ -2,6 +2,7 @@ package com.example.eightyage.domain.user.service;
 
 import com.example.eightyage.domain.user.dto.request.UserDeleteRequest;
 import com.example.eightyage.domain.user.entity.User;
+import com.example.eightyage.domain.user.entity.UserRole;
 import com.example.eightyage.domain.user.repository.UserRepository;
 import com.example.eightyage.global.dto.AuthUser;
 import com.example.eightyage.global.exception.BadRequestException;
@@ -21,7 +22,7 @@ public class UserService {
 
     /* 훠원저장 */
     @Transactional
-    public User saveUser(String email, String nickname, String password) {
+    public User saveUser(String email, String nickname, String password, String userRole) {
 
         if (userRepository.existsByEmail(email)) {
             throw new BadRequestException("등록된 이메일입니다.");
@@ -29,7 +30,7 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(password);
 
-        User user = new User(email, nickname, encodedPassword);
+        User user = new User(email, nickname, encodedPassword, UserRole.of(userRole));
 
         return userRepository.save(user);
     }
