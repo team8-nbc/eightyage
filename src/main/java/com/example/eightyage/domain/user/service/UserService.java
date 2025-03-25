@@ -22,7 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    /* 훠원저장 */
+    /* 회원저장 */
     @Transactional
     public User saveUser(String email, String nickname, String password, String userRole) {
 
