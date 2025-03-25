@@ -1,6 +1,8 @@
 package com.example.eightyage.domain.auth.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken {
 
     @Id
@@ -22,6 +24,7 @@ public class RefreshToken {
     @Enumerated(EnumType.STRING)
     private TokenState tokenState;
 
+    @Builder
     public RefreshToken(Long userId) {
         this.userId = userId;
         this.token = UUID.randomUUID().toString();
