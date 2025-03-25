@@ -18,4 +18,4 @@ spring:
         format_sql: true
 jwt:
   secret:
-    key: vA1z3L5pQ8sK0yHdWfJdXhMTJpS9gA2fByKr6B+3UkE=
+    key: ${JWT_SECRET_KEY}
