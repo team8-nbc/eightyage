@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
+import static com.example.eightyage.global.exception.ErrorMessage.INTERNAL_SERVER_ERROR;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,6 +39,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ErrorResponse<String> handleGlobalException(Exception e) {
         log.error("Exception : {}",e.getMessage(),  e);
-        return ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
+        return ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR.getMessage());
     }
 }

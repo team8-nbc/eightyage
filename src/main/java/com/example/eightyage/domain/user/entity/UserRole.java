@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+import static com.example.eightyage.global.exception.ErrorMessage.NOT_INVALID_USER_ROLE;
+
 @Getter
 @RequiredArgsConstructor
 public enum UserRole {
@@ -19,7 +21,7 @@ public enum UserRole {
         return Arrays.stream(UserRole.values())
                 .filter(r -> r.getUserRole().equalsIgnoreCase(role))
                 .findFirst()
-                .orElseThrow(() -> new UnauthorizedException("유효하지 않은 UserRole"));
+                .orElseThrow(() -> new UnauthorizedException(NOT_INVALID_USER_ROLE.getMessage()));
     }
 
     public static class Authority {
