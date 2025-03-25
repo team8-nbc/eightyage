@@ -1,8 +1,8 @@
-package com.example.eightyage.domain.search.fakeProduct.controller;
+package com.example.eightyage.domain.search.fakeProduct.v2.controller;
 
 import com.example.eightyage.domain.search.fakeProduct.dto.ProductSearchResponse;
 import com.example.eightyage.domain.search.fakeProduct.entity.Category;
-import com.example.eightyage.domain.search.fakeProduct.service.ProductService;
+import com.example.eightyage.domain.search.fakeProduct.v2.service.ProductServiceV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductControllerV2 {
 
-    private final ProductService productService;
+    private final ProductServiceV2 productService;
 
-    @GetMapping("/api/v1/products")
+    @GetMapping("/api/v2/products")
     public ResponseEntity<Page<ProductSearchResponse>> searchProduct(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Category category,
@@ -26,19 +25,4 @@ public class ProductController {
     ) {
         return ResponseEntity.ok(productService.getProducts(name, category, size, page));
     }
-
-//    @GetMapping("/api/v1/products")
-//    public ResponseEntity<Page<ProductSearchResponse>> searchProduct(
-//            @RequestParam(required = false) String name,
-//            @RequestParam(required = false) Category category,
-//            @RequestParam(defaultValue = "10") int size,
-//            @RequestParam(defaultValue = "1") int page
-//    ) {
-//        Page<ProductSearchResponse> results = productService.getProducts(name, category, size, page);
-//        if (StringUtils.hasText(name) && !results.isEmpty()){
-//            searchService.saveKeyword(name);
-//        }
-//        return ResponseEntity.ok(results);
-//    }
-
 }

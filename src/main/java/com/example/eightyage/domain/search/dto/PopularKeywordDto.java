@@ -8,6 +8,6 @@ import lombok.Getter;
 public class PopularKeywordDto {
 
     private String keyword;
-    private long count;
+    private Long count;
 
 }
