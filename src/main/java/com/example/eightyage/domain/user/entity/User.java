@@ -1,9 +1,12 @@
 package com.example.eightyage.domain.user.entity;
 
+import com.example.eightyage.global.dto.AuthUser;
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -29,5 +32,21 @@ public class User extends TimeStamped {
         this.nickname = nickname;
         this.password = password;
         this.userRole = UserRole.ROLE_USER;
+    }
+
+    public User(Long id, String email, String nickname, UserRole userRole) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.userRole = userRole;
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getUserId(), authUser.getEmail(), authUser.getEmail(),
+                UserRole.of(authUser.getAuthorities().iterator().next().getAuthority()));
+    }
+
+    public void deleteUser() {
+        setDeletedAt(LocalDateTime.now());
     }
 }

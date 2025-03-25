@@ -21,6 +21,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     /* 회원가입 */
+    @Transactional
     public AuthTokensResponseDto signup(AuthSignupRequestDto request) {
 
         if (!request.getPassword().equals(request.getPasswordCheck())) {
@@ -36,6 +37,10 @@ public class AuthService {
     @Transactional
     public AuthTokensResponseDto signin(AuthSigninRequestDto request) {
         User user = userService.findUserByEmailOrElseThrow(request.getEmail());
+
+        if (user.getDeletedAt() != null) {
+            throw new UnauthorizedException("탈퇴한 유저 이메일입니다.");
+        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new UnauthorizedException("잘못된 비밀번호입니다.");
