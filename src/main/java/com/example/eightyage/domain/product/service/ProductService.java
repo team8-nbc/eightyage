@@ -7,6 +7,8 @@ import com.example.eightyage.domain.product.entity.Category;
 import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.entity.SaleState;
 import com.example.eightyage.domain.product.repository.ProductRepository;
+import com.example.eightyage.domain.review.entity.Review;
+import com.example.eightyage.domain.review.repository.ReviewRepository;
 import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,6 +25,7 @@ import java.util.Set;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
 
     // 제품 생성
     @Transactional
@@ -57,6 +61,11 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
+        List<Review> findReviewList = reviewRepository.findReviewsByProductId(productId);
+
+        for(Review review : findReviewList){
+            review.setDeletedAt(LocalDateTime.now());
+        }
 
         findProduct.setDeletedAt(LocalDateTime.now());
     }
