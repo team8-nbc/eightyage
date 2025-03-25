@@ -8,6 +8,7 @@ import com.example.eightyage.domain.user.service.UserService;
 import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import com.example.eightyage.global.util.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static com.example.eightyage.domain.auth.entity.TokenState.INVALIDATED;
+import static com.example.eightyage.global.exception.ErrorMessage.EXPIRED_REFRESH_TOKEN;
+import static com.example.eightyage.global.exception.ErrorMessage.REFRESH_TOKEN_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,11 +39,22 @@ public class TokenServiceTest {
     @InjectMocks
     private TokenService tokenService;
 
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        user = User.builder()
+                .email("email@email.com")
+                .nickname("nickname")
+                .userRole(UserRole.ROLE_USER)
+                .build();
+
+    }
+
     /* createAccessToken */
     @Test
     void 토큰발급_AccessToken_발급_성공() {
         // given
-        User user = new User(1L, "email@email.com", "nickname", UserRole.ROLE_USER);
         String accessToken = "accessToken";
 
         given(jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getNickname(), user.getUserRole())).willReturn(accessToken);
@@ -56,7 +70,6 @@ public class TokenServiceTest {
     @Test
     void 토큰발급_RefreshToken_발급_성공() {
         // given
-        User user = new User(1L, "email@email.com", "nickname", UserRole.ROLE_USER);
         RefreshToken mockRefreshToken = new RefreshToken(user.getId());
 
         given(refreshTokenRepository.save(any(RefreshToken.class))).willReturn(mockRefreshToken);
@@ -73,7 +86,6 @@ public class TokenServiceTest {
     @Test
     void 토큰유효성검사_비활성_상태일때_실패() {
         // given
-        User user = new User(1L, "email@email.com", "nickname", UserRole.ROLE_USER);
         String refreshToken = "refresh-token";
 
         RefreshToken mockRefreshToken = mock(RefreshToken.class);
@@ -82,9 +94,9 @@ public class TokenServiceTest {
         given(mockRefreshToken.getTokenState()).willReturn(INVALIDATED);
 
         // when & then
-        assertThrows(UnauthorizedException.class,
-                () -> tokenService.reissueToken(refreshToken),
-                "사용이 만료된 refresh token 입니다.");
+        UnauthorizedException unauthorizedException = assertThrows(UnauthorizedException.class,
+                () -> tokenService.reissueToken(refreshToken));
+        assertEquals(unauthorizedException.getMessage(), EXPIRED_REFRESH_TOKEN.getMessage());
     }
 
     @Test
@@ -95,15 +107,14 @@ public class TokenServiceTest {
         given(refreshTokenRepository.findByToken(any(String.class))).willReturn(Optional.empty());
 
         // when & then
-        assertThrows(NotFoundException.class,
-                () -> tokenService.reissueToken(refreshToken),
-                "리프레시 토큰을 찾을 수 없습니다.");
+        NotFoundException notFoundException = assertThrows(NotFoundException.class,
+                () -> tokenService.reissueToken(refreshToken));
+        assertEquals(notFoundException.getMessage(), REFRESH_TOKEN_NOT_FOUND.getMessage());
     }
 
     @Test
     void 토큰유효성검사_성공() {
         // given
-        User user = new User(1L, "email@email.com", "nickname", UserRole.ROLE_USER);
         String refreshToken = "refresh-token";
 
         RefreshToken mockRefreshToken = mock(RefreshToken.class);
