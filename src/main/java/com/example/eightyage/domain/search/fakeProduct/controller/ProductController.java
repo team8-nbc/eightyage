@@ -27,4 +27,18 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProducts(name, category, size, page));
     }
 
+//    @GetMapping("/api/v1/products")
+//    public ResponseEntity<Page<ProductSearchResponse>> searchProduct(
+//            @RequestParam(required = false) String name,
+//            @RequestParam(required = false) Category category,
+//            @RequestParam(defaultValue = "10") int size,
+//            @RequestParam(defaultValue = "1") int page
+//    ) {
+//        Page<ProductSearchResponse> results = productService.getProducts(name, category, size, page);
+//        if (StringUtils.hasText(name) && !results.isEmpty()){
+//            searchService.saveKeyword(name);
+//        }
+//        return ResponseEntity.ok(results);
+//    }
+
 }
