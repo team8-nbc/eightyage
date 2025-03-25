@@ -10,8 +10,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root        # Docker 내부 비밀번호 지정
+          MYSQL_DATABASE: team8_test       # Docker 내부 DB 이름
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +30,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build and Test with Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: clean build
+      - name: Wait for MySQL to be ready
+        run: sleep 15
+
+      - name: Run Test with Gradle
+        env:
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+        run: ./gradlew clean test -Dspring.profiles.active=ci
