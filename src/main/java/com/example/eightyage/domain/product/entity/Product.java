@@ -4,8 +4,12 @@ import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,15 +21,24 @@ public class Product extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Category category;
+    @Setter private Category category;
 
-    private String content;
+    @Setter private String content;
 
-    private Integer price;
+    @Setter private Integer price;
 
     @Enumerated(EnumType.STRING)
-    private SaleState saleState;
+    @Setter private SaleState saleState;
+
+    public Product(String name, Category category, String content, Integer price, SaleState saleState) {
+        this.name = name;
+        this.category = category;
+        this.content = content;
+        this.price = price;
+        this.saleState = saleState;
+    }
 }

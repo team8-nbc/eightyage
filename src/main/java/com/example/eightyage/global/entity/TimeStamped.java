@@ -2,6 +2,7 @@ package com.example.eightyage.global.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,5 +26,5 @@ public abstract class TimeStamped {
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime deletedAt;
+    @Setter private LocalDateTime deletedAt;
 }
