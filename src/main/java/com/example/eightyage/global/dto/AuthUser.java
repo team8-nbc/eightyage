@@ -1,7 +1,7 @@
 package com.example.eightyage.global.dto;
 
 import com.example.eightyage.domain.user.entity.UserRole;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
 public class AuthUser {
 
     private final Long userId;
@@ -18,6 +17,7 @@ public class AuthUser {
     private final String nickname;
     private final Collection<? extends GrantedAuthority> authorities;
 
+    @Builder
     public AuthUser(Long userId, String email, String nickname, UserRole role) {
         this.userId = userId;
         this.email = email;

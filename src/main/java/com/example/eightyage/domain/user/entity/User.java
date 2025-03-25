@@ -3,6 +3,8 @@ package com.example.eightyage.domain.user.entity;
 import com.example.eightyage.global.dto.AuthUser;
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends TimeStamped {
 
     @Id
@@ -27,23 +29,22 @@ public class User extends TimeStamped {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    public User(String email, String nickname, String password, UserRole userRole) {
+    @Builder
+    public User(Long id, String email, String nickname, String password, UserRole userRole) {
+        this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
         this.userRole = userRole;
     }
 
-    public User(Long id, String email, String nickname, UserRole userRole) {
-        this.id = id;
-        this.email = email;
-        this.nickname = nickname;
-        this.userRole = userRole;
-    }
-
     public static User fromAuthUser(AuthUser authUser) {
-        return new User(authUser.getUserId(), authUser.getEmail(), authUser.getEmail(),
-                UserRole.of(authUser.getAuthorities().iterator().next().getAuthority()));
+        return User.builder()
+                .id(authUser.getUserId())
+                .email(authUser.getEmail())
+                .nickname(authUser.getNickname())
+                .userRole(UserRole.of(authUser.getAuthorities().iterator().next().getAuthority()))
+                .build();
     }
 
     public void deleteUser() {
