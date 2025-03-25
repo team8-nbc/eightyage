@@ -39,7 +39,7 @@ public class AuthServiceTest {
     @Test
     void 회원가입_비밀번호_확인_불일치_실패() {
         // given
-        AuthSignupRequestDto passwordCheckErrorSignupDto = new AuthSignupRequestDto("email@email.com", "nickname", "password1234", "password12341");
+        AuthSignupRequestDto passwordCheckErrorSignupDto = new AuthSignupRequestDto("email@email.com", "nickname", "password1234", "password12341", "USER_ROLE");
 
         // when & then
         assertThrows(BadRequestException.class,
@@ -50,12 +50,12 @@ public class AuthServiceTest {
     @Test
     void 회원가입_성공() {
         // given
-        AuthSignupRequestDto successSignupDto = new AuthSignupRequestDto("email@email.com", "nickname", "password1234", "password1234");
+        AuthSignupRequestDto successSignupDto = new AuthSignupRequestDto("email@email.com", "nickname", "password1234", "password1234", "USER_ROLE");
         User user = new User(1L, successSignupDto.getEmail(), successSignupDto.getNickname(), UserRole.ROLE_USER);
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
 
-        given(userService.saveUser(any(String.class), any(String.class), any(String.class))).willReturn(user);
+        given(userService.saveUser(any(String.class), any(String.class), any(String.class), any(String.class))).willReturn(user);
         given(tokenService.createAccessToken(any(User.class))).willReturn(accessToken);
         given(tokenService.createRefreshToken(any(User.class))).willReturn(refreshToken);
 

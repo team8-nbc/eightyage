@@ -28,7 +28,7 @@ public class AuthService {
             throw new BadRequestException("비밀번호가 비밀번호 확인과 일치하지 않습니다.");
         }
 
-        User user = userService.saveUser(request.getEmail(), request.getNickname(), request.getPassword());
+        User user = userService.saveUser(request.getEmail(), request.getNickname(), request.getPassword(), request.getUserRole());
 
         return getTokenResponse(user);
     }
