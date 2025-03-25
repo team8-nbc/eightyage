@@ -25,7 +25,7 @@ public class AuthService {
     public AuthTokensResponseDto signup(AuthSignupRequestDto request) {
 
         if (!request.getPassword().equals(request.getPasswordCheck())) {
-            throw new BadRequestException("비밀번호 확인을 입력해주세요");
+            throw new BadRequestException("비밀번호가 비밀번호 확인과 일치하지 않습니다.");
         }
 
         User user = userService.saveUser(request.getEmail(), request.getNickname(), request.getPassword());
