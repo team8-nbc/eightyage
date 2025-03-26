@@ -34,7 +34,7 @@ public class ProductController {
     @PatchMapping("/{productId}")
     public ResponseEntity<ProductUpdateResponseDto> updateProduct(
             @PathVariable Long productId,
-            @Valid @RequestBody ProductUpdateRequestDto requestDto
+            @RequestBody ProductUpdateRequestDto requestDto
     ){
         ProductUpdateResponseDto responseDto = productService.updateProduct(productId, requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getSaleState(), requestDto.getPrice());
 
