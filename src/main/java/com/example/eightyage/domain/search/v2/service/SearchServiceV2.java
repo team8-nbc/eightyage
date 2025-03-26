@@ -12,10 +12,9 @@ import org.springframework.util.StringUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Service
 @RequiredArgsConstructor
-public class SearchService {
+public class SearchServiceV2 {
 
     private final SearchLogRepository searchLogRepository;
     private final CacheManager cacheManager;

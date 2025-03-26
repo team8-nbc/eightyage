@@ -4,7 +4,7 @@ import com.example.eightyage.domain.search.fakeProduct.dto.ProductSearchResponse
 import com.example.eightyage.domain.search.fakeProduct.entity.Category;
 import com.example.eightyage.domain.search.fakeProduct.entity.FakeProduct;
 import com.example.eightyage.domain.search.fakeProduct.repository.ProductRepository;
-import com.example.eightyage.domain.search.v2.service.SearchService;
+import com.example.eightyage.domain.search.v1.service.SearchServiceV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +19,7 @@ import org.springframework.util.StringUtils;
 public class ProductServiceV1 {
 
     private final ProductRepository productRepository;
-    private final SearchService searchService;
+    private final SearchServiceV1 searchService;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Page<ProductSearchResponse> getProducts(String productName, Category category, int size, int page) {
