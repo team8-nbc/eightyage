@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.eightyage.global.exception.ErrorMessage.*;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -21,13 +23,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     /* 회원가입 */
+    @Transactional
     public AuthTokensResponseDto signup(AuthSignupRequestDto request) {
 
         if (!request.getPassword().equals(request.getPasswordCheck())) {
-            throw new BadRequestException("비밀번호 확인을 입력해주세요");
+            throw new BadRequestException(PASSWORD_CONFIRMATION_MISMATCH.getMessage());
         }
 
-        User user = userService.saveUser(request.getEmail(), request.getNickname(), request.getPassword());
+        User user = userService.saveUser(request.getEmail(), request.getNickname(), request.getPassword(), request.getUserRole());
 
         return getTokenResponse(user);
     }
@@ -37,8 +40,12 @@ public class AuthService {
     public AuthTokensResponseDto signin(AuthSigninRequestDto request) {
         User user = userService.findUserByEmailOrElseThrow(request.getEmail());
 
+        if (user.getDeletedAt() != null) {
+            throw new UnauthorizedException(DEACTIVATED_USER_EMAIL.getMessage());
+        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new UnauthorizedException("잘못된 비밀번호입니다.");
+            throw new UnauthorizedException(INVALID_PASSWORD.getMessage());
         }
 
         return getTokenResponse(user);
@@ -58,6 +65,9 @@ public class AuthService {
         String accessToken = tokenService.createAccessToken(user);
         String refreshToken = tokenService.createRefreshToken(user);
 
-        return new AuthTokensResponseDto(accessToken, refreshToken);
+        return AuthTokensResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }
