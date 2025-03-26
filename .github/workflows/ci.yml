@@ -1,0 +1,50 @@
+name: Java CI with Gradle
+
+on:
+  pull_request:
+    branches: [ "dev", "main" ]  # dev, main 모두 PR 대상
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0        # MySQL 컨테이너 띄우기
+        env:
+          MYSQL_ROOT_PASSWORD: root        # Docker 내부 비밀번호 지정
+          MYSQL_DATABASE: team8_test       # Docker 내부 DB 이름
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..10}; do
+            if mysql -hmysql -P3306 -uroot -proot -e "SELECT 1"; then
+              echo "MySQL is up!"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 5
+          done
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Test And Build with Gradle
+        env:
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+        run: ./gradlew clean build -Dspring.profiles.active=ci

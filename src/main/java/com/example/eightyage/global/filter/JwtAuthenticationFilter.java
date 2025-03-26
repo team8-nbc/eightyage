@@ -21,6 +21,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.example.eightyage.global.exception.ErrorMessage.*;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -48,18 +50,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             } catch (SecurityException | MalformedJwtException e) {
                 log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", e);
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않는 JWT 서명입니다.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, INVALID_JWT_SIGNATURE.getMessage());
                 return;
             } catch (ExpiredJwtException e) {
                 log.error("Expired JWT token, 만료된 JWT token 입니다.", e);
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 JWT 토큰입니다.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, EXPIRED_JWT_TOKEN.getMessage());
                 return;
             } catch (UnsupportedJwtException e) {
                 log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.", e);
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "지원되지 않는 JWT 토큰입니다.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, UNSUPPORTED_JWT_TOKEN.getMessage());
                 return;
             } catch (Exception e) {
-                log.error("Internal server error", e);
+                log.error(INTERNAL_SERVER_ERROR.getMessage(), e);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 return;
             }

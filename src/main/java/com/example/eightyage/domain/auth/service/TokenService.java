@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static com.example.eightyage.domain.auth.entity.TokenState.INVALIDATED;
+import static com.example.eightyage.global.exception.ErrorMessage.EXPIRED_REFRESH_TOKEN;
+import static com.example.eightyage.global.exception.ErrorMessage.REFRESH_TOKEN_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class TokenService {
         RefreshToken refreshToken = findByTokenOrElseThrow(token);
 
         if (refreshToken.getTokenState() == INVALIDATED) {
-            throw new UnauthorizedException("사용이 만료된 refresh token 입니다.");
+            throw new UnauthorizedException(EXPIRED_REFRESH_TOKEN.getMessage());
         }
         refreshToken.updateTokenStatus(INVALIDATED);
 
@@ -46,6 +48,6 @@ public class TokenService {
 
     private RefreshToken findByTokenOrElseThrow(String token) {
         return refreshTokenRepository.findByToken(token).orElseThrow(
-                () -> new NotFoundException("리프레시 토큰을 찾을 수 없습니다."));
+                () -> new NotFoundException(REFRESH_TOKEN_NOT_FOUND.getMessage()));
     }
 }

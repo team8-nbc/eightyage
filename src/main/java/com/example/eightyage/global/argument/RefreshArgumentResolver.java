@@ -10,6 +10,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import static com.example.eightyage.global.exception.ErrorMessage.REFRESH_TOKEN_MUST_BE_STRING;
+import static com.example.eightyage.global.exception.ErrorMessage.REFRESH_TOKEN_NOT_FOUND;
+
 public class RefreshArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -17,7 +20,7 @@ public class RefreshArgumentResolver implements HandlerMethodArgumentResolver {
         boolean isStringType = parameter.getParameterType().equals(String.class);
 
         if (hasRefreshTokenAnnotation != isStringType) {
-            throw new UnauthorizedException("@RefreshToken과 String 타입은 함께 사용되어야 합니다.");
+            throw new UnauthorizedException(REFRESH_TOKEN_MUST_BE_STRING.getMessage());
         }
         return hasRefreshTokenAnnotation;
     }
@@ -39,6 +42,6 @@ public class RefreshArgumentResolver implements HandlerMethodArgumentResolver {
                 }
             }
         }
-        throw new UnauthorizedException("리프레시 토큰이 존재하지 않습니다. 다시 로그인 해주세요.");
+        throw new UnauthorizedException(REFRESH_TOKEN_NOT_FOUND.getMessage());
     }
 }
