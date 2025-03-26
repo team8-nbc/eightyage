@@ -3,12 +3,14 @@ package com.example.eightyage.global.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import static com.example.eightyage.global.exception.ErrorMessage.*;
+
 @Getter
 public enum ErrorCode {
-    AUTHORIZATION(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "찾지 못했습니다."),
-    FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다.");
+    AUTHORIZATION(HttpStatus.UNAUTHORIZED, DEFAULT_UNAUTHORIZED.getMessage()),
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, DEFAULT_BAD_REQUEST.getMessage()),
+    NOT_FOUND(HttpStatus.NOT_FOUND, DEFAULT_NOT_FOUND.getMessage()),
+    FORBIDDEN(HttpStatus.FORBIDDEN, DEFAULT_FORBIDDEN.getMessage());
 
     private final HttpStatus status;
     private final String defaultMessage;
