@@ -46,7 +46,7 @@ public class ReviewController {
     public ResponseEntity<ReviewUpdateResponseDto> updateReview(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long reviewId,
-            @Valid @RequestBody ReviewUpdateRequestDto requestDto
+            @RequestBody ReviewUpdateRequestDto requestDto
     ){
         ReviewUpdateResponseDto responseDto = reviewService.updateReview(authUser.getUserId(), reviewId, requestDto.getScore(), requestDto.getContent());
 
