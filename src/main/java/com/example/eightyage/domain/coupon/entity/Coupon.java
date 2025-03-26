@@ -16,7 +16,8 @@ public class Coupon extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String coupon_number;
+    @Column(unique = true)
+    private String couponCode;
 
     @Enumerated(EnumType.STRING)
     private CouponState state;
