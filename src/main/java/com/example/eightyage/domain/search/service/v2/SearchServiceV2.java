@@ -39,9 +39,9 @@ public class SearchServiceV2 {
         Cache countCache = cacheManager.getCache(KEYWORD_COUNT_MAP);
 
         if (countCache != null) {
-            Long count = countCache.get(keyword, Long.class);
-            count = (count == null) ? 1L : count + 1;
-            countCache.put(keyword, count);
+            String countStr = countCache.get(keyword, String.class);
+            long count = (countStr == null) ? 1L : Long.parseLong(countStr) + 1;
+            countCache.put(keyword, Long.toString(count));
         }
 
         updateKeywordSet(keyword);
