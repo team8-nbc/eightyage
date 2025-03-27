@@ -9,28 +9,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/events")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class EventController {
 
     private final EventService eventService;
 
-    @PostMapping
+    @PostMapping("/v1/events")
     public ResponseEntity<EventResponseDto> createEvent(@RequestBody EventRequestDto eventRequestDto) {
         return ResponseEntity.ok(eventService.saveEvent(eventRequestDto));
     }
 
-    @GetMapping
+    @GetMapping("/v1/events")
     public ResponseEntity<Page<EventResponseDto>> getEvents(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(eventService.getEvents(page, size));
     }
 
-    @GetMapping("/{eventId}")
+    @GetMapping("/v1/events/{eventId}")
     public ResponseEntity<EventResponseDto> getEvent(@PathVariable long eventId) {
         return ResponseEntity.ok(eventService.getEvent(eventId));
     }
 
-    @PatchMapping("/{eventId}")
+    @PatchMapping("/v1/events/{eventId}")
     public ResponseEntity<EventResponseDto> updateEvent(@PathVariable long eventId, @RequestBody EventRequestDto eventRequestDto) {
         return ResponseEntity.ok(eventService.updateEvent(eventId, eventRequestDto));
     }

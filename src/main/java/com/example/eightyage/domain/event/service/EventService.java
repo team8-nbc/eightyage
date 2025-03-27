@@ -5,6 +5,8 @@ import com.example.eightyage.domain.event.dto.response.EventResponseDto;
 import com.example.eightyage.domain.event.entity.Event;
 import com.example.eightyage.domain.event.entity.EventState;
 import com.example.eightyage.domain.event.repository.EventRepository;
+import com.example.eightyage.global.exception.BadRequestException;
+import com.example.eightyage.global.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +24,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final StringRedisTemplate stringRedisTemplate;
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ADMIN")
     public EventResponseDto saveEvent(EventRequestDto eventRequestDto) {
         Event event = new Event(
                 eventRequestDto.getName(),
@@ -42,7 +44,7 @@ public class EventService {
     }
 
     public Page<EventResponseDto> getEvents(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page-1, size);
         Page<Event> events = eventRepository.findAll(pageable);
 
         // 모든 events들 checkState로 state 상태 갱신하기
@@ -52,18 +54,16 @@ public class EventService {
     }
 
     public EventResponseDto getEvent(long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+        Event event = findByIdOrElseThrow(eventId);
 
         checkEventState(event);
 
         return event.toDto();
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ADMIN")
     public EventResponseDto updateEvent(long eventId, EventRequestDto eventRequestDto) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+        Event event = findByIdOrElseThrow(eventId);
 
         event.update(eventRequestDto);
 
@@ -86,10 +86,20 @@ public class EventService {
         }
     }
 
-    public boolean isValidEvent(Event event) {
-        LocalDateTime now = LocalDateTime.now();
-        return  ((event.getStartDate().isBefore(now) || event.getStartDate().isEqual(now)) &&
-                (event.getEndDate().isAfter(now) || event.getEndDate().isEqual(now)) )
-                ? true : false;
+    public Event getValidEventOrThrow(Long eventId) {
+        Event event = findByIdOrElseThrow(eventId);
+
+        checkEventState(event);
+
+        if(event.getState() != EventState.VALID) {
+            throw new BadRequestException(ErrorMessage.INVALID_EVENT_PERIOD.getMessage());
+        }
+
+        return event;
+    }
+
+    public Event findByIdOrElseThrow(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new BadRequestException(ErrorMessage.EVENT_NOT_FOUND.getMessage()));
     }
 }
