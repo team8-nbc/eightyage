@@ -38,7 +38,7 @@ public class ProductController {
     ){
         ProductUpdateResponseDto responseDto = productService.updateProduct(productId, requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getSaleState(), requestDto.getPrice());
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return ResponseEntity.ok(responseDto);
     }
 
     // 제품 단건 조회
@@ -46,7 +46,7 @@ public class ProductController {
     public ResponseEntity<ProductGetResponseDto> getProduct(@PathVariable Long productId){
         ProductGetResponseDto responseDto = productService.findProductById(productId);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return ResponseEntity.ok(responseDto);
     }
 
     // 제품 삭제

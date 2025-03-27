@@ -50,7 +50,7 @@ public class ReviewController {
     ){
         ReviewUpdateResponseDto responseDto = reviewService.updateReview(authUser.getUserId(), reviewId, requestDto.getScore(), requestDto.getContent());
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return ResponseEntity.ok(responseDto);
     }
 
     // 리뷰 다건 조회
@@ -68,7 +68,7 @@ public class ReviewController {
 
         Page<ReviewsGetResponseDto> reviews = reviewService.findReviews(productId, sortedPageable);
 
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
+        return ResponseEntity.ok(reviews);
     }
 
     // 리뷰 삭제
