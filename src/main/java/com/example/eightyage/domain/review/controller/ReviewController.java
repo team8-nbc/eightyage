@@ -35,7 +35,7 @@ public class ReviewController {
             @PathVariable Long productId,
             @Valid @RequestBody ReviewSaveRequestDto requestDto
     ){
-        ReviewSaveResponseDto responseDto = reviewService.saveReview(authUser.getUserId(), productId, requestDto.getScore(), requestDto.getContent());
+        ReviewSaveResponseDto responseDto = reviewService.saveReview(authUser.getUserId(), productId, requestDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -48,7 +48,7 @@ public class ReviewController {
             @PathVariable Long reviewId,
             @RequestBody ReviewUpdateRequestDto requestDto
     ){
-        ReviewUpdateResponseDto responseDto = reviewService.updateReview(authUser.getUserId(), reviewId, requestDto.getScore(), requestDto.getContent());
+        ReviewUpdateResponseDto responseDto = reviewService.updateReview(authUser.getUserId(), reviewId, requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
