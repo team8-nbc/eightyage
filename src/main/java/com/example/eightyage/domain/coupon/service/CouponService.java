@@ -27,9 +27,11 @@ public class CouponService {
     private final EventService eventService;
     private final StringRedisTemplate stringRedisTemplate;
 
+    private static final String EVENT_QUANTITIY_PREFIX = "event:quantity:";
+
     public CouponResponseDto issueCoupon(AuthUser authUser, Long eventId) {
         // 수량 우선 차감
-        Long remain = stringRedisTemplate.opsForValue().decrement("event:quantity:" + eventId);
+        Long remain = stringRedisTemplate.opsForValue().decrement(EVENT_QUANTITIY_PREFIX + eventId);
         if (remain == null || remain < 0) { // atomic? `DESC`?
             throw new BadRequestException(ErrorMessage.COUPON_OUT_OF_STOCK.getMessage());
         }

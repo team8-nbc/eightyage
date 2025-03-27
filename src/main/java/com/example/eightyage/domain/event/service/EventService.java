@@ -73,15 +73,10 @@ public class EventService {
     }
 
     private void checkEventState(Event event) {
-        LocalDateTime now = LocalDateTime.now();
-        EventState newState =
-                ( (event.getStartDate().isBefore(now) || event.getStartDate().isEqual(now)) &&
-                        (event.getEndDate().isAfter(now) || event.getEndDate().isEqual(now)) )
-                        ? EventState.VALID
-                        : EventState.INVALID;
+        EventState prevState = event.getState();
+        event.updateStateAt(LocalDateTime.now());
 
-        if (event.getState() != newState) {
-            event.setState(newState);
+        if(event.getState() != prevState) {
             eventRepository.save(event);
         }
     }
@@ -89,7 +84,7 @@ public class EventService {
     public Event getValidEventOrThrow(Long eventId) {
         Event event = findByIdOrElseThrow(eventId);
 
-        checkEventState(event);
+        event.updateStateAt(LocalDateTime.now());
 
         if(event.getState() != EventState.VALID) {
             throw new BadRequestException(ErrorMessage.INVALID_EVENT_PERIOD.getMessage());
