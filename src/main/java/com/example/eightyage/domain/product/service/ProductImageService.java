@@ -67,7 +67,7 @@ public class ProductImageService {
     public void deleteImage(Long imageId) {
         ProductImage findProductImage = productImageRepository.findProductImageByIdOrElseThrow(imageId);
 
-        findProductImage.setDeletedAt(LocalDateTime.now());
+        findProductImage.delete();
     }
 }
 
