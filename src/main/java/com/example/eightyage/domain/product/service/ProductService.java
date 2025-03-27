@@ -1,5 +1,7 @@
 package com.example.eightyage.domain.product.service;
 
+import com.example.eightyage.domain.product.dto.request.ProductSaveRequestDto;
+import com.example.eightyage.domain.product.dto.request.ProductUpdateRequestDto;
 import com.example.eightyage.domain.product.dto.response.ProductGetResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
@@ -32,8 +34,8 @@ public class ProductService {
 
     // 제품 생성
     @Transactional
-    public ProductSaveResponseDto saveProduct(String productName, Category category, String content, Integer price) {
-        Product product = new Product(productName, category, content, price, SaleState.FOR_SALE);
+    public ProductSaveResponseDto saveProduct(ProductSaveRequestDto requestDto) {
+        Product product = new Product(requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getPrice(), SaleState.FOR_SALE);
 
         Product savedProduct = productRepository.save(product);
 
@@ -50,14 +52,14 @@ public class ProductService {
 
     // 제품 수정
     @Transactional
-    public ProductUpdateResponseDto updateProduct(Long productId, String productName, Category category, String content, SaleState saleState, Integer price) {
+    public ProductUpdateResponseDto updateProduct(Long productId, ProductUpdateRequestDto requestDto) {
         Product findProduct = findProductByIdOrElseThrow(productId);
 
-        findProduct.updateName(productName);
-        findProduct.updateCategory(category);
-        findProduct.updateContent(content);
-        findProduct.updateSaleState(saleState);
-        findProduct.updatePrice(price);
+        findProduct.updateName(requestDto.getProductName());
+        findProduct.updateCategory(requestDto.getCategory());
+        findProduct.updateContent(requestDto.getContent());
+        findProduct.updateSaleState(requestDto.getSaleState());
+        findProduct.updatePrice(requestDto.getPrice());
 
         return ProductUpdateResponseDto.builder()
                 .productName(findProduct.getName())
