@@ -50,5 +50,8 @@ public class GlobalExceptionHandler {
         return ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR.getMessage());
     }
 
-
+    @ExceptionHandler(ProductImageUploadException.class)
+    public ResponseEntity<String> handleProductImageUploadException(ProductImageUploadException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
 }
