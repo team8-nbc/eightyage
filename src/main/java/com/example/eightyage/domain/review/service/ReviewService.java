@@ -3,6 +3,7 @@ package com.example.eightyage.domain.review.service;
 import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
 import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.repository.ProductRepository;
+import com.example.eightyage.domain.product.service.ProductService;
 import com.example.eightyage.domain.review.dto.response.ReviewSaveResponseDto;
 import com.example.eightyage.domain.review.dto.response.ReviewUpdateResponseDto;
 import com.example.eightyage.domain.review.dto.response.ReviewsGetResponseDto;
@@ -10,6 +11,7 @@ import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.domain.user.service.UserService;
+import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,13 +29,13 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final UserService userService;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     // 리뷰 생성
     @Transactional
     public ReviewSaveResponseDto saveReview(Long userId, Long productId, Double score, String content) {
         User findUser = userService.findUserByIdOrElseThrow(userId);
-        Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
+        Product findProduct = productService.findProductByIdOrElseThrow(productId);
 
         Review review = new Review(findUser, findProduct, score, content);
         Review savedReview = reviewRepository.save(review);
@@ -54,7 +56,7 @@ public class ReviewService {
     @Transactional
     public ReviewUpdateResponseDto updateReview(Long userId, Long reviewId, Double score, String content) {
         User findUser = userService.findUserByIdOrElseThrow(userId);
-        Review findReview = reviewRepository.findReviewByIdOrElseThrow(reviewId);
+        Review findReview = findReviewByIdOrElseThrow(reviewId);
 
         if(findUser.getId().equals(findReview.getUser().getId())){
             findReview.updateScore(score);
@@ -94,12 +96,18 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long userId, Long reviewId) {
         User findUser = userService.findUserByIdOrElseThrow(userId);
-        Review findReview = reviewRepository.findReviewByIdOrElseThrow(reviewId);
+        Review findReview = findReviewByIdOrElseThrow(reviewId);
 
         if(findUser.getId().equals(findReview.getUser().getId())){
             findReview.delete();
         } else {
             throw new UnauthorizedException("리뷰를 삭제할 권한이 없습니다.");
         }
+    }
+
+    public Review findReviewByIdOrElseThrow(Long reviewId){
+        return reviewRepository.findById(reviewId).orElseThrow(
+                () -> new NotFoundException("해당 리뷰가 존재하지 않습니다.")
+        );
     }
 }
