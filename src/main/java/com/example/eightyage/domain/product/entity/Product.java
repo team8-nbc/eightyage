@@ -2,6 +2,7 @@ package com.example.eightyage.domain.product.entity;
 
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,7 @@ public class Product extends TimeStamped {
     @Enumerated(EnumType.STRING)
     private SaleState saleState;
 
+    @Builder
     public Product(String name, Category category, String content, Integer price, SaleState saleState) {
         this.name = name;
         this.category = category;
