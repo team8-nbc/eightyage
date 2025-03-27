@@ -80,6 +80,6 @@ public class ReviewController {
     ){
         reviewService.deleteReview(authUser.getUserId(), reviewId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

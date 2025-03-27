@@ -55,6 +55,6 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId){
         productService.deleteProduct(productId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
