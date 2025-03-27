@@ -4,10 +4,13 @@ import com.example.eightyage.domain.product.dto.request.ProductSaveRequestDto;
 import com.example.eightyage.domain.product.dto.request.ProductUpdateRequestDto;
 import com.example.eightyage.domain.product.dto.response.ProductGetResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
+import com.example.eightyage.domain.product.dto.response.ProductSearchResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
+import com.example.eightyage.domain.product.entity.Category;
 import com.example.eightyage.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -47,6 +50,28 @@ public class ProductController {
         ProductGetResponseDto responseDto = productService.findProductById(productId);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    // 제품 다건 조회 version 1
+    @GetMapping("/v1/products")
+    public ResponseEntity<Page<ProductSearchResponseDto>> searchProductV1(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Category category,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        return ResponseEntity.ok(productService.getProductsV1(name, category, size, page));
+    }
+
+    // 제품 다건 조회 version 2
+    @GetMapping("/v2/products")
+    public ResponseEntity<Page<ProductSearchResponseDto>> searchProductV2(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Category category,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        return ResponseEntity.ok(productService.getProductsV2(name, category, size, page));
     }
 
     // 제품 삭제
