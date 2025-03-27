@@ -13,9 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        indexes = @Index(name = "idx_email", columnList = "email")
-)
 public class User extends TimeStamped {
 
     @Id

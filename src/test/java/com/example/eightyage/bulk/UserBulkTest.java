@@ -36,7 +36,7 @@ public class UserBulkTest {
                 userBulkRepository.bulkInsertUsers(batchList);
                 batchList.clear();
 
-//                sleep(500);
+                sleep(500);
             }
         }
 

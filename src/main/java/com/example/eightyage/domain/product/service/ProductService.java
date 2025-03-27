@@ -2,10 +2,7 @@ package com.example.eightyage.domain.product.service;
 
 import com.example.eightyage.domain.product.dto.request.ProductSaveRequestDto;
 import com.example.eightyage.domain.product.dto.request.ProductUpdateRequestDto;
-import com.example.eightyage.domain.product.dto.response.ProductGetResponseDto;
-import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
-import com.example.eightyage.domain.product.dto.response.ProductSearchResponseDto;
-import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
+import com.example.eightyage.domain.product.dto.response.*;
 import com.example.eightyage.domain.product.entity.Category;
 import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.entity.SaleState;
@@ -96,13 +93,24 @@ public class ProductService {
     public Page<ProductSearchResponseDto> getProductsV1(String productName, Category category, int size, int page) {
         int adjustedPage = Math.max(0, page - 1);
         Pageable pageable = PageRequest.of(adjustedPage, size);
-        Page<Product> products = productRepository.findProducts(productName, category, pageable);
+        Page<ProductSearchResponseDto> productsResponse = productRepository.findProductsOrderByReviewScore(productName, category, pageable);
 
-        if (StringUtils.hasText(productName) && !products.isEmpty()) {
+        if (StringUtils.hasText(productName) && !productsResponse.isEmpty()) {
             searchServiceV1.saveSearchLog(productName); // 로그만 저장
         }
+        return productsResponse;
+    }
 
-        return products.map(ProductSearchResponseDto::from);
+    // 제품 다건 조회 version 3
+    @Transactional(readOnly = true)
+    public Page<ProductSearchResponseDto> getProductsV3(String productName, Category category, int size, int page) {
+        int adjustedPage = Math.max(0, page - 1);
+        Pageable pageable = PageRequest.of(adjustedPage, size);
+        Page<ProductSearchResponseDto> productsResponse = productRepository.findProductsOrderByReviewScore(productName, category, pageable);
+        if (StringUtils.hasText(productName) && !productsResponse.isEmpty()) {
+            searchServiceV1.saveSearchLog(productName); // 로그만 저장
+        }
+        return productsResponse;
     }
 
     // 제품 다건 조회 version 2
@@ -110,13 +118,13 @@ public class ProductService {
     public Page<ProductSearchResponseDto> getProductsV2(String productName, Category category, int size, int page) {
         int adjustedPage = Math.max(0, page - 1);
         Pageable pageable = PageRequest.of(adjustedPage, size);
-        Page<Product> products = productRepository.findProducts(productName, category, pageable);
+        Page<ProductSearchResponseDto> productsResponse = productRepository.findProductsOrderByReviewScore(productName, category, pageable);
 
-        if (StringUtils.hasText(productName) && !products.isEmpty()) {
+        if (StringUtils.hasText(productName) && !productsResponse.isEmpty()) {
             searchServiceV2.logAndCountKeyword(productName); // 로그 저장 + 캐시 작업
         }
 
-        return products.map(ProductSearchResponseDto::from);
+        return productsResponse;
     }
 
     // 제품 삭제
