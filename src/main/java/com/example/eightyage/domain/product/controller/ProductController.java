@@ -14,7 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -22,7 +22,7 @@ public class ProductController {
 
     // 제품 생성
     @Secured("ROLE_ADMIN")
-    @PostMapping
+    @PostMapping("/v1/products")
     public ResponseEntity<Void> saveProduct(@Valid @RequestBody ProductSaveRequestDto requestDto){
         productService.saveProduct(requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getPrice());
 
@@ -31,7 +31,7 @@ public class ProductController {
 
     // 제품 수정
     @Secured("ROLE_ADMIN")
-    @PatchMapping("/{productId}")
+    @PatchMapping("/v1/products/{productId}")
     public ResponseEntity<ProductUpdateResponseDto> updateProduct(
             @PathVariable Long productId,
             @RequestBody ProductUpdateRequestDto requestDto
@@ -42,7 +42,7 @@ public class ProductController {
     }
 
     // 제품 단건 조회
-    @GetMapping("/{productId}")
+    @GetMapping("/v1/products/{productId}")
     public ResponseEntity<ProductGetResponseDto> getProduct(@PathVariable Long productId){
         ProductGetResponseDto responseDto = productService.findProductById(productId);
 
@@ -51,7 +51,7 @@ public class ProductController {
 
     // 제품 삭제
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/v1/products/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId){
         productService.deleteProduct(productId);
 

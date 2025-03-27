@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ProductImageController {
 
@@ -18,7 +18,7 @@ public class ProductImageController {
 
     // 제품 이미지 업로드
     @Secured("ROLE_ADMIN")
-    @PostMapping("/{productId}/images")
+    @PostMapping("/v1/products/{productId}/images")
     public ResponseEntity<String> uploadImage(
             @PathVariable Long productId,
             @RequestParam("file") MultipartFile file) throws IOException {
@@ -29,7 +29,7 @@ public class ProductImageController {
 
     // 제품 이미지 삭제
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("/images/{imageId}")
+    @DeleteMapping("/v1/products/images/{imageId}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
         productImageService.deleteImage(imageId);
         return new ResponseEntity<>(HttpStatus.OK);

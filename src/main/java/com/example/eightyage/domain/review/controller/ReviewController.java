@@ -21,7 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -29,7 +29,7 @@ public class ReviewController {
 
     // 리뷰 생성
     @Secured("ROLE_USER")
-    @PostMapping("/products/{productId}/reviews")
+    @PostMapping("/v1/products/{productId}/reviews")
     public ResponseEntity<ReviewSaveResponseDto> saveReview(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long productId,
@@ -42,7 +42,7 @@ public class ReviewController {
 
     // 리뷰 수정
     @Secured("ROLE_USER")
-    @PatchMapping("/reviews/{reviewId}")
+    @PatchMapping("/v1/reviews/{reviewId}")
     public ResponseEntity<ReviewUpdateResponseDto> updateReview(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long reviewId,
@@ -54,7 +54,7 @@ public class ReviewController {
     }
 
     // 리뷰 다건 조회
-    @GetMapping("/products/{productId}/reviews")
+    @GetMapping("/v1/products/{productId}/reviews")
     public ResponseEntity<Page<ReviewsGetResponseDto>> getReviews(
             @PathVariable Long productId,
             @RequestParam(required = false, defaultValue = "score") String orderBy,
@@ -73,7 +73,7 @@ public class ReviewController {
 
     // 리뷰 삭제
     @Secured("ROLE_USER")
-    @DeleteMapping("/reviews/{reviewId}")
+    @DeleteMapping("/v1/reviews/{reviewId}")
     public ResponseEntity<Void> deleteReview(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long reviewId
