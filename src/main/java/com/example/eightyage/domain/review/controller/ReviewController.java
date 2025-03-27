@@ -58,15 +58,12 @@ public class ReviewController {
     public ResponseEntity<Page<ReviewsGetResponseDto>> getReviews(
             @PathVariable Long productId,
             @RequestParam(required = false, defaultValue = "score") String orderBy,
-            @PageableDefault(size = 10) Pageable pageable
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ){
-        Pageable sortedPageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, orderBy)
-        );
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, orderBy));
 
-        Page<ReviewsGetResponseDto> reviews = reviewService.findReviews(productId, sortedPageable);
+        Page<ReviewsGetResponseDto> reviews = reviewService.findReviews(productId, pageRequest);
 
         return ResponseEntity.ok(reviews);
     }

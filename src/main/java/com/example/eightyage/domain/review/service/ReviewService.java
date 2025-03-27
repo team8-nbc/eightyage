@@ -12,6 +12,7 @@ import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,8 +73,8 @@ public class ReviewService {
 
     // 리뷰 다건 조회
     @Transactional(readOnly = true)
-    public Page<ReviewsGetResponseDto> findReviews(Long productId, Pageable pageable) {
-        Page<Review> reviewPage = reviewRepository.findByProductIdAndProductDeletedAtIsNull(productId, pageable);
+    public Page<ReviewsGetResponseDto> findReviews(Long productId, PageRequest pageRequest) {
+        Page<Review> reviewPage = reviewRepository.findByProductIdAndProductDeletedAtIsNull(productId, pageRequest);
 
         return reviewPage.map(review -> ReviewsGetResponseDto.builder()
                 .id(review.getId())
