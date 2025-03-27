@@ -15,8 +15,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.id = :productId AND p.deletedAt IS NULL")
     Optional<Product> findById(@Param("productId") Long productId);
-
-    default Product findProductByIdOrElseThrow(Long productId){
-        return findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 존재하지 않습니다."));
-    }
 }

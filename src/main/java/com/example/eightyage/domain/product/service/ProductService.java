@@ -9,6 +9,7 @@ import com.example.eightyage.domain.product.entity.SaleState;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
+import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.example.eightyage.global.exception.ErrorMessage.USER_EMAIL_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +51,7 @@ public class ProductService {
     // 제품 수정
     @Transactional
     public ProductUpdateResponseDto updateProduct(Long productId, String productName, Category category, String content, SaleState saleState, Integer price) {
-        Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
+        Product findProduct = findProductByIdOrElseThrow(productId);
 
         findProduct.updateName(productName);
         findProduct.updateCategory(category);
@@ -70,7 +73,7 @@ public class ProductService {
     // 제품 단건 조회
     @Transactional(readOnly = true)
     public ProductGetResponseDto findProductById(Long productId) {
-        Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
+        Product findProduct = findProductByIdOrElseThrow(productId);
 
         return ProductGetResponseDto.builder()
                 .productName(findProduct.getName())
@@ -86,7 +89,7 @@ public class ProductService {
     // 제품 삭제
     @Transactional
     public void deleteProduct(Long productId) {
-        Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
+        Product findProduct = findProductByIdOrElseThrow(productId);
         List<Review> findReviewList = reviewRepository.findReviewsByProductId(productId);
 
         for(Review review : findReviewList){
@@ -94,5 +97,11 @@ public class ProductService {
         }
 
         findProduct.delete();
+    }
+
+    public Product findProductByIdOrElseThrow(Long productId) {
+        return productRepository.findById(productId).orElseThrow(
+                () -> new NotFoundException("해당 제품이 존재하지 않습니다.")
+        );
     }
 }
