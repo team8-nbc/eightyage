@@ -90,9 +90,9 @@ public class ProductService {
         List<Review> findReviewList = reviewRepository.findReviewsByProductId(productId);
 
         for(Review review : findReviewList){
-            review.setDeletedAt(LocalDateTime.now());
+            review.delete();
         }
 
-        findProduct.setDeletedAt(LocalDateTime.now());
+        findProduct.delete();
     }
 }
