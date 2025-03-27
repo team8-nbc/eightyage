@@ -10,15 +10,14 @@ import com.example.eightyage.domain.product.entity.SaleState;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
-import com.example.eightyage.domain.search.v1.service.SearchServiceV1;
-import com.example.eightyage.domain.search.v2.service.SearchServiceV2;
+import com.example.eightyage.domain.search.service.v1.SearchServiceV1;
+import com.example.eightyage.domain.search.service.v2.SearchServiceV2;
 import com.example.eightyage.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -91,7 +90,7 @@ public class ProductService {
     }
 
     // 제품 다건 조회 version 1
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = true)
     public Page<ProductSearchResponseDto> getProductsV1(String productName, Category category, int size, int page) {
         int adjustedPage = Math.max(0, page - 1);
         Pageable pageable = PageRequest.of(adjustedPage, size);
@@ -105,7 +104,7 @@ public class ProductService {
     }
 
     // 제품 다건 조회 version 2
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = true)
     public Page<ProductSearchResponseDto> getProductsV2(String productName, Category category, int size, int page) {
         int adjustedPage = Math.max(0, page - 1);
         Pageable pageable = PageRequest.of(adjustedPage, size);

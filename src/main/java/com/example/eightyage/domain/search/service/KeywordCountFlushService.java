@@ -1,5 +1,6 @@
-package com.example.eightyage.domain.search.v2.service;
+package com.example.eightyage.domain.search.service;
 
+import com.example.eightyage.domain.search.entity.KeywordCount;
 import com.example.eightyage.domain.search.repository.KeywordCountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +19,14 @@ public class KeywordCountFlushService {
 
     private final CacheManager cacheManager;
     private final KeywordCountRepository keywordCountRepository;
+    private static final String KEYWORD_COUNT_MAP = "keywordCountMap";
+    private static final String KEYWORD_KEY_SET = "keywordKeySet";
 
     @Transactional
     @Scheduled(fixedRate = 5 * 60 * 1000) // 5분마다 실행
     public void flushKeywordCounts() {
-        Cache countCache = cacheManager.getCache("keywordCountMap");
-        Cache keySetCache = cacheManager.getCache("keywordKeySet");
+        Cache countCache = cacheManager.getCache(KEYWORD_COUNT_MAP);
+        Cache keySetCache = cacheManager.getCache(KEYWORD_KEY_SET);
 
         if (countCache == null || keySetCache == null) {
             log.warn("캐시를 찾을 수 없습니다.");
@@ -48,7 +51,7 @@ public class KeywordCountFlushService {
                 keywordCountRepository.findById(keyword)
                         .ifPresentOrElse(
                                 exist -> exist.updateCount(exist.getCount() + count),
-                                () -> keywordCountRepository.save(new com.example.eightyage.domain.search.entity.KeywordCount(keyword, count))
+                                () -> keywordCountRepository.save(new KeywordCount(keyword, count))
                         );
                 flushed++;
                 countCache.evict(keyword);
