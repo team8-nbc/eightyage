@@ -1,5 +1,6 @@
 package com.example.eightyage.global.exception;
 
+import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.global.entity.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,10 @@ public class GlobalExceptionHandler {
     public ErrorResponse<String> handleGlobalException(Exception e) {
         log.error("Exception : {}",e.getMessage(),  e);
         return ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR.getMessage());
+    }
+
+    @ExceptionHandler(ProductImageUploadException.class)
+    public ResponseEntity<String> handleProductImageUploadException(ProductImageUploadException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }
