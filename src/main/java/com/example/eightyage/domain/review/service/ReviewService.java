@@ -4,6 +4,8 @@ import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDt
 import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.product.service.ProductService;
+import com.example.eightyage.domain.review.dto.request.ReviewSaveRequestDto;
+import com.example.eightyage.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.example.eightyage.domain.review.dto.response.ReviewSaveResponseDto;
 import com.example.eightyage.domain.review.dto.response.ReviewUpdateResponseDto;
 import com.example.eightyage.domain.review.dto.response.ReviewsGetResponseDto;
@@ -33,11 +35,11 @@ public class ReviewService {
 
     // 리뷰 생성
     @Transactional
-    public ReviewSaveResponseDto saveReview(Long userId, Long productId, Double score, String content) {
+    public ReviewSaveResponseDto saveReview(Long userId, Long productId, ReviewSaveRequestDto requestDto) {
         User findUser = userService.findUserByIdOrElseThrow(userId);
         Product findProduct = productService.findProductByIdOrElseThrow(productId);
 
-        Review review = new Review(findUser, findProduct, score, content);
+        Review review = new Review(findUser, findProduct, requestDto.getScore(), requestDto.getContent());
         Review savedReview = reviewRepository.save(review);
 
         return ReviewSaveResponseDto.builder()
@@ -54,13 +56,13 @@ public class ReviewService {
 
     // 리뷰 수정
     @Transactional
-    public ReviewUpdateResponseDto updateReview(Long userId, Long reviewId, Double score, String content) {
+    public ReviewUpdateResponseDto updateReview(Long userId, Long reviewId, ReviewUpdateRequestDto requestDto) {
         User findUser = userService.findUserByIdOrElseThrow(userId);
         Review findReview = findReviewByIdOrElseThrow(reviewId);
 
         if(findUser.getId().equals(findReview.getUser().getId())){
-            findReview.updateScore(score);
-            findReview.updateContent(content);
+            findReview.updateScore(requestDto.getScore());
+            findReview.updateContent(requestDto.getContent());
         } else {
             throw new UnauthorizedException("리뷰를 수정할 권한이 없습니다.");
         }
