@@ -4,6 +4,7 @@ import com.example.eightyage.domain.product.dto.request.ProductSaveRequestDto;
 import com.example.eightyage.domain.product.dto.request.ProductUpdateRequestDto;
 import com.example.eightyage.domain.product.dto.response.ProductGetResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
+import com.example.eightyage.domain.product.dto.response.ProductSearchResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
 import com.example.eightyage.domain.product.entity.Category;
 import com.example.eightyage.domain.product.entity.Product;
@@ -11,19 +12,19 @@ import com.example.eightyage.domain.product.entity.SaleState;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
-import com.example.eightyage.domain.user.entity.User;
+import com.example.eightyage.domain.search.service.v1.SearchServiceV1;
+import com.example.eightyage.domain.search.service.v2.SearchServiceV2;
 import com.example.eightyage.global.exception.NotFoundException;
-import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
-import static com.example.eightyage.global.exception.ErrorMessage.USER_EMAIL_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
+    private final SearchServiceV1 searchServiceV1;
+    private final SearchServiceV2 searchServiceV2;
 
     // 제품 생성
     @Transactional
@@ -86,6 +89,34 @@ public class ProductService {
                 .createdAt(findProduct.getCreatedAt())
                 .modifiedAt(findProduct.getModifiedAt())
                 .build();
+    }
+
+    // 제품 다건 조회 version 1
+    @Transactional(readOnly = true)
+    public Page<ProductSearchResponseDto> getProductsV1(String productName, Category category, int size, int page) {
+        int adjustedPage = Math.max(0, page - 1);
+        Pageable pageable = PageRequest.of(adjustedPage, size);
+        Page<Product> products = productRepository.findProducts(productName, category, pageable);
+
+        if (StringUtils.hasText(productName) && !products.isEmpty()) {
+            searchServiceV1.saveSearchLog(productName); // 로그만 저장
+        }
+
+        return products.map(ProductSearchResponseDto::from);
+    }
+
+    // 제품 다건 조회 version 2
+    @Transactional(readOnly = true)
+    public Page<ProductSearchResponseDto> getProductsV2(String productName, Category category, int size, int page) {
+        int adjustedPage = Math.max(0, page - 1);
+        Pageable pageable = PageRequest.of(adjustedPage, size);
+        Page<Product> products = productRepository.findProducts(productName, category, pageable);
+
+        if (StringUtils.hasText(productName) && !products.isEmpty()) {
+            searchServiceV2.logAndCountKeyword(productName); // 로그 저장 + 캐시 작업
+        }
+
+        return products.map(ProductSearchResponseDto::from);
     }
 
     // 제품 삭제
