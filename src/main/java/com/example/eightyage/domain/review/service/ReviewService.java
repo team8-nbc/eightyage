@@ -10,6 +10,7 @@ import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.domain.user.service.UserService;
+import com.example.eightyage.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,9 +56,11 @@ public class ReviewService {
         User findUser = userService.findUserByIdOrElseThrow(userId);
         Review findReview = reviewRepository.findReviewByIdOrElseThrow(reviewId);
 
-        if(findUser.getId() == findReview.getUser().getId()){
+        if(findUser.getId().equals(findReview.getUser().getId())){
             findReview.updateScore(score);
             findReview.updateContent(content);
+        } else {
+            throw new UnauthorizedException("리뷰를 수정할 권한이 없습니다.");
         }
 
         return ReviewUpdateResponseDto.builder()
