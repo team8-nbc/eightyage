@@ -21,7 +21,7 @@ public class ProductImageController {
     @PostMapping("/v1/products/{productId}/images")
     public ResponseEntity<String> uploadImage(
             @PathVariable Long productId,
-            @RequestParam("file") MultipartFile file) throws IOException {
+            @RequestParam("file") MultipartFile file) {
 
         String imageUrl = productImageService.uploadImage(productId, file);
         return ResponseEntity.ok(imageUrl);
