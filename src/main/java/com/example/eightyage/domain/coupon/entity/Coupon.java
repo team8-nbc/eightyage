@@ -1,5 +1,6 @@
 package com.example.eightyage.domain.coupon.entity;
 
+import com.example.eightyage.domain.coupon.dto.response.CouponResponseDto;
 import com.example.eightyage.domain.event.entity.Event;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.global.entity.TimeStamped;
@@ -27,4 +28,22 @@ public class Coupon extends TimeStamped {
 
     @ManyToOne
     private Event event;
+
+    public Coupon(String couponCode, CouponState state, User user, Event event) {
+        this.couponCode = couponCode;
+        this.state = state;
+        this.user = user;
+        this.event = event;
+    }
+
+    public CouponResponseDto toDto() {
+        return new CouponResponseDto(
+                this.couponCode,
+                this.state,
+                this.user.getNickname(),
+                this.event.getName(),
+                this.event.getStartDate(),
+                this.event.getEndDate()
+        );
+    }
 }

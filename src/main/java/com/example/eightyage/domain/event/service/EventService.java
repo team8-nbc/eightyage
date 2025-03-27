@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,7 +20,9 @@ import java.time.LocalDateTime;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final StringRedisTemplate stringRedisTemplate;
 
+    @Secured("ROLE_ADMIN")
     public EventResponseDto saveEvent(EventRequestDto eventRequestDto) {
         Event event = new Event(
                 eventRequestDto.getName(),
@@ -31,6 +35,9 @@ public class EventService {
         checkEventState(event);
 
         Event savedEvent = eventRepository.save(event);
+
+        stringRedisTemplate.opsForValue().set("event:quantity:" + savedEvent.getId(), String.valueOf(savedEvent.getQuantity()));
+
         return savedEvent.toDto();
     }
 
@@ -53,6 +60,7 @@ public class EventService {
         return event.toDto();
     }
 
+    @Secured("ROLE_ADMIN")
     public EventResponseDto updateEvent(long eventId, EventRequestDto eventRequestDto) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("Event not found"));
@@ -76,5 +84,12 @@ public class EventService {
             event.setState(newState);
             eventRepository.save(event);
         }
+    }
+
+    public boolean isValidEvent(Event event) {
+        LocalDateTime now = LocalDateTime.now();
+        return  ((event.getStartDate().isBefore(now) || event.getStartDate().isEqual(now)) &&
+                (event.getEndDate().isAfter(now) || event.getEndDate().isEqual(now)) )
+                ? true : false;
     }
 }
