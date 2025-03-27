@@ -34,7 +34,15 @@ public class ProductService {
 
         Product savedProduct = productRepository.save(product);
 
-        return new ProductSaveResponseDto(savedProduct.getName(), savedProduct.getCategory(), savedProduct.getPrice(), savedProduct.getSaleState(), savedProduct.getCreatedAt(), savedProduct.getModifiedAt());
+        return ProductSaveResponseDto.builder()
+                .productName(savedProduct.getName())
+                .category(savedProduct.getCategory())
+                .price(savedProduct.getPrice())
+                .content(savedProduct.getContent())
+                .saleState(savedProduct.getSaleState())
+                .createdAt(savedProduct.getCreatedAt())
+                .modifiedAt(savedProduct.getModifiedAt())
+                .build();
     }
 
     // 제품 수정
@@ -48,7 +56,15 @@ public class ProductService {
         if(saleState != null) findProduct.setSaleState(saleState);
         if(price != null) findProduct.setPrice(price);
 
-        return new ProductUpdateResponseDto(findProduct.getName(), findProduct.getPrice(), findProduct.getContent(), findProduct.getCategory(), findProduct.getSaleState(), findProduct.getCreatedAt(), findProduct.getModifiedAt());
+        return ProductUpdateResponseDto.builder()
+                .productName(findProduct.getName())
+                .category(findProduct.getCategory())
+                .price(findProduct.getPrice())
+                .content(findProduct.getContent())
+                .saleState(findProduct.getSaleState())
+                .createdAt(findProduct.getCreatedAt())
+                .modifiedAt(findProduct.getModifiedAt())
+                .build();
     }
 
     // 제품 단건 조회
@@ -56,7 +72,15 @@ public class ProductService {
     public ProductGetResponseDto findProductById(Long productId) {
         Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
 
-        return new ProductGetResponseDto(findProduct.getName(), findProduct.getContent(), findProduct.getCategory(), findProduct.getPrice(), findProduct.getSaleState(), findProduct.getCreatedAt(), findProduct.getModifiedAt());
+        return ProductGetResponseDto.builder()
+                .productName(findProduct.getName())
+                .content(findProduct.getContent())
+                .category(findProduct.getCategory())
+                .price(findProduct.getPrice())
+                .saleState(findProduct.getSaleState())
+                .createdAt(findProduct.getCreatedAt())
+                .modifiedAt(findProduct.getModifiedAt())
+                .build();
     }
 
     // 제품 삭제
