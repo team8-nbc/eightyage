@@ -1,5 +1,6 @@
 package com.example.eightyage.domain.review.dto.request;
 
+import com.example.eightyage.global.dto.ValidationMessage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -7,9 +8,9 @@ import lombok.Getter;
 @Getter
 public class ReviewSaveRequestDto {
 
-    @NotNull(message = "반드시 값이 있어야 합니다.")
+    @NotNull(message = ValidationMessage.NOT_NULL_SCORE)
     private Double score;
 
-    @NotBlank(message = "반드시 값이 있어야 합니다.")
+    @NotBlank(message = ValidationMessage.NOT_BLANK_CONTENT)
     private String content;
 }
