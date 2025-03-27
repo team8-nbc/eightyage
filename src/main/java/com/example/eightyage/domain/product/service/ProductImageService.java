@@ -4,6 +4,7 @@ import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.entity.ProductImage;
 import com.example.eightyage.domain.product.repository.ProductImageRepository;
 import com.example.eightyage.domain.product.repository.ProductRepository;
+import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.ProductImageUploadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,7 @@ public class ProductImageService {
 
     private final S3Client s3Client;
     private final ProductImageRepository productImageRepository;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Value("${aws.s3.bucket}")
     private String bucket;
@@ -52,7 +53,7 @@ public class ProductImageService {
             String imageUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, region, fileName);
 
             // DB 저장
-            Product product = productRepository.findProductByIdOrElseThrow(productId);
+            Product product = productService.findProductByIdOrElseThrow(productId);
             ProductImage productImage = new ProductImage(product, imageUrl);
             productImageRepository.save(productImage);
 
@@ -65,9 +66,15 @@ public class ProductImageService {
     // 제품 이미지 삭제
     @Transactional
     public void deleteImage(Long imageId) {
-        ProductImage findProductImage = productImageRepository.findProductImageByIdOrElseThrow(imageId);
+        ProductImage findProductImage = findProductImageByIdOrElseThrow(imageId);
 
         findProductImage.delete();
+    }
+
+    public ProductImage findProductImageByIdOrElseThrow(Long imageId){
+        return productImageRepository.findById(imageId).orElseThrow(
+                () -> new NotFoundException("해당 이미지가 존재하지 않습니다.")
+        );
     }
 }
 
