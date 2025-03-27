@@ -50,11 +50,11 @@ public class ProductService {
     public ProductUpdateResponseDto updateProduct(Long productId, String productName, Category category, String content, SaleState saleState, Integer price) {
         Product findProduct = productRepository.findProductByIdOrElseThrow(productId);
 
-        if(productName != null) findProduct.setName(productName);
-        if(category != null) findProduct.setCategory(category);
-        if(content != null) findProduct.setContent(content);
-        if(saleState != null) findProduct.setSaleState(saleState);
-        if(price != null) findProduct.setPrice(price);
+        findProduct.updateName(productName);
+        findProduct.updateCategory(category);
+        findProduct.updateContent(content);
+        findProduct.updateSaleState(saleState);
+        findProduct.updatePrice(price);
 
         return ProductUpdateResponseDto.builder()
                 .productName(findProduct.getName())

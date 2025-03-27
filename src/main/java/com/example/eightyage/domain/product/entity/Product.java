@@ -21,18 +21,17 @@ public class Product extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Setter private Category category;
+    private Category category;
 
-    @Setter private String content;
+    private String content;
 
-    @Setter private Integer price;
+    private Integer price;
 
     @Enumerated(EnumType.STRING)
-    @Setter private SaleState saleState;
+    private SaleState saleState;
 
     public Product(String name, Category category, String content, Integer price, SaleState saleState) {
         this.name = name;
@@ -40,5 +39,35 @@ public class Product extends TimeStamped {
         this.content = content;
         this.price = price;
         this.saleState = saleState;
+    }
+
+    public void updateName(String newName){
+        if(newName != null){
+            this.name = newName;
+        }
+    }
+
+    public void updateCategory(Category newCategory) {
+        if (newCategory != null) {
+            this.category = newCategory;
+        }
+    }
+
+    public void updateContent(String newContent) {
+        if (newContent != null) {
+            this.content = newContent;
+        }
+    }
+
+    public void updatePrice(Integer newPrice) {
+        if (newPrice != null) {
+            this.price = newPrice;
+        }
+    }
+
+    public void updateSaleState(SaleState newSaleState) {
+        if (newSaleState != null) {
+            this.saleState = newSaleState;
+        }
     }
 }
