@@ -1,10 +1,10 @@
 package com.example.eightyage.global.exception;
 
-import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.global.entity.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
+import static com.example.eightyage.global.exception.ErrorMessage.DEFAULT_FORBIDDEN;
 import static com.example.eightyage.global.exception.ErrorMessage.INTERNAL_SERVER_ERROR;
 
 @Slf4j
@@ -34,6 +35,12 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .toList();
         return ErrorResponse.of(HttpStatus.BAD_REQUEST, validFailedList);
+    }
+
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ErrorResponse<String> handleAccessDeniedException() {
+        return ErrorResponse.of(HttpStatus.FORBIDDEN, DEFAULT_FORBIDDEN.getMessage());
     }
 
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
