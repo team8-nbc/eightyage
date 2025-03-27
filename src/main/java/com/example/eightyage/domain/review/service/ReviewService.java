@@ -1,5 +1,6 @@
 package com.example.eightyage.domain.review.service;
 
+import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
 import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.review.dto.response.ReviewSaveResponseDto;
@@ -35,7 +36,16 @@ public class ReviewService {
         Review review = new Review(findUser, findProduct, score, content);
         Review savedReview = reviewRepository.save(review);
 
-        return new ReviewSaveResponseDto(savedReview.getId(), findUser.getId(), findProduct.getId(), findUser.getNickname(), savedReview.getScore(), savedReview.getContent(), savedReview.getCreatedAt(), savedReview.getModifiedAt());
+        return ReviewSaveResponseDto.builder()
+                .id(savedReview.getId())
+                .userId(savedReview.getUser().getId())
+                .productId(savedReview.getProduct().getId())
+                .nickname(savedReview.getUser().getNickname())
+                .score(savedReview.getScore())
+                .content(savedReview.getContent())
+                .createdAt(savedReview.getCreatedAt())
+                .modifiedAt(savedReview.getModifiedAt())
+                .build();
     }
 
     // 리뷰 수정
@@ -49,7 +59,15 @@ public class ReviewService {
             if(score != null) findReview.setScore(score);
         }
 
-        return new ReviewUpdateResponseDto(findReview.getId(), userId, findUser.getNickname(), findReview.getScore(), findReview.getContent(), findReview.getCreatedAt(), findReview.getModifiedAt());
+        return ReviewUpdateResponseDto.builder()
+                .id(findReview.getId())
+                .userId(findUser.getId())
+                .nickname(findUser.getNickname())
+                .score(findReview.getScore())
+                .content(findReview.getContent())
+                .createdAt(findReview.getCreatedAt())
+                .modifiedAt(findReview.getModifiedAt())
+                .build();
     }
 
     // 리뷰 다건 조회
@@ -57,15 +75,15 @@ public class ReviewService {
     public Page<ReviewsGetResponseDto> findReviews(Long productId, Pageable pageable) {
         Page<Review> reviewPage = reviewRepository.findByProductIdAndProductDeletedAtIsNull(productId, pageable);
 
-        return reviewPage.map(review -> new ReviewsGetResponseDto(
-                review.getId(),
-                review.getUser().getId(),
-                review.getUser().getNickname(),
-                review.getScore(),
-                review.getContent(),
-                review.getCreatedAt(),
-                review.getModifiedAt()
-        ));
+        return reviewPage.map(review -> ReviewsGetResponseDto.builder()
+                .id(review.getId())
+                .userId(review.getUser().getId())
+                .nickname(review.getUser().getNickname())
+                .score(review.getScore())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .modifiedAt(review.getModifiedAt())
+                .build());
     }
 
     // 리뷰 삭제
