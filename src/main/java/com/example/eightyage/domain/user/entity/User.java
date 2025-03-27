@@ -3,10 +3,7 @@ package com.example.eightyage.domain.user.entity;
 import com.example.eightyage.global.dto.AuthUser;
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 

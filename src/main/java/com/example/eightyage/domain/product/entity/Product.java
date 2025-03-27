@@ -2,6 +2,7 @@ package com.example.eightyage.domain.product.entity;
 
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "product")
 public class Product extends TimeStamped {
 
