@@ -58,11 +58,4 @@ public class SearchServiceV2 {
             keySetCache.put("keywords", keywordSet);
         }
     }
-
-    @Transactional
-    public void logAndCountKeyword(String keyword) {
-        saveSearchLog(keyword);
-        increaseKeywordCount(keyword);
-    }
-
 }
