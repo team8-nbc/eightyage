@@ -10,6 +10,9 @@ server:
       timeout: 1800
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
+
   application:
     name: eightyage
 
@@ -29,6 +32,16 @@ spring:
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
 
+aws:
+  credentials:
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+  region: ap-northeast-2
+  s3:
+    bucket: my-gom-bucket
+
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+
+
