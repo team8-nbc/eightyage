@@ -55,8 +55,8 @@ public class ReviewService {
         Review findReview = reviewRepository.findReviewByIdOrElseThrow(reviewId);
 
         if(findUser.getId() == findReview.getUser().getId()){
-            if(content != null) findReview.setContent(content);
-            if(score != null) findReview.setScore(score);
+            findReview.updateScore(score);
+            findReview.updateContent(content);
         }
 
         return ReviewUpdateResponseDto.builder()
