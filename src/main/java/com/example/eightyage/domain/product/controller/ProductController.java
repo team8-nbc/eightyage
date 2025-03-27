@@ -24,7 +24,7 @@ public class ProductController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/v1/products")
     public ResponseEntity<ProductSaveResponseDto> saveProduct(@Valid @RequestBody ProductSaveRequestDto requestDto){
-        ProductSaveResponseDto responseDto = productService.saveProduct(requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getPrice());
+        ProductSaveResponseDto responseDto = productService.saveProduct(requestDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -36,7 +36,7 @@ public class ProductController {
             @PathVariable Long productId,
             @RequestBody ProductUpdateRequestDto requestDto
     ){
-        ProductUpdateResponseDto responseDto = productService.updateProduct(productId, requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getSaleState(), requestDto.getPrice());
+        ProductUpdateResponseDto responseDto = productService.updateProduct(productId, requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
