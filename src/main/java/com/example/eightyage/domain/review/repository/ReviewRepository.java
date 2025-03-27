@@ -5,6 +5,7 @@ import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.global.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +22,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findByProductIdAndProductDeletedAtIsNull(Long productId, Pageable pageable);
 
-    @Query("SELECT r FROM Review r WHERE r.product.id = :productId AND r.deletedAt IS NULL")
+    @Query("SELECT r FROM Review r JOIN FETCH r.user JOIN FETCH r.product WHERE r.product.id = :productId AND r.deletedAt IS NULL")
     List<Review> findReviewsByProductId(@Param("productId") Long productId);
 }
