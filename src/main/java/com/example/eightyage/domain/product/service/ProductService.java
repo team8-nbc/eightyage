@@ -29,10 +29,12 @@ public class ProductService {
 
     // 제품 생성
     @Transactional
-    public void saveProduct(String productName, Category category, String content, Integer price) {
+    public ProductSaveResponseDto saveProduct(String productName, Category category, String content, Integer price) {
         Product product = new Product(productName, category, content, price, SaleState.FOR_SALE);
 
-        productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+
+        return new ProductSaveResponseDto(savedProduct.getName(), savedProduct.getCategory(), savedProduct.getPrice(), savedProduct.getSaleState(), savedProduct.getCreatedAt(), savedProduct.getModifiedAt());
     }
 
     // 제품 수정

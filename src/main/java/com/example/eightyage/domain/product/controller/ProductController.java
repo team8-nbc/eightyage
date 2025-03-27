@@ -23,10 +23,10 @@ public class ProductController {
     // 제품 생성
     @Secured("ROLE_ADMIN")
     @PostMapping("/v1/products")
-    public ResponseEntity<Void> saveProduct(@Valid @RequestBody ProductSaveRequestDto requestDto){
-        productService.saveProduct(requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getPrice());
+    public ResponseEntity<ProductSaveResponseDto> saveProduct(@Valid @RequestBody ProductSaveRequestDto requestDto){
+        ProductSaveResponseDto responseDto = productService.saveProduct(requestDto.getProductName(), requestDto.getCategory(), requestDto.getContent(), requestDto.getPrice());
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     // 제품 수정
