@@ -100,11 +100,11 @@ public class ReviewService {
         User findUser = userService.findUserByIdOrElseThrow(userId);
         Review findReview = findReviewByIdOrElseThrow(reviewId);
 
-        if(findUser.getId().equals(findReview.getUser().getId())){
-            findReview.delete();
-        } else {
+        if(!findUser.getId().equals(findReview.getUser().getId())){
             throw new UnauthorizedException("리뷰를 삭제할 권한이 없습니다.");
         }
+
+        reviewRepository.delete(findReview);
     }
 
     public Review findReviewByIdOrElseThrow(Long reviewId){

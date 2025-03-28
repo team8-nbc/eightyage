@@ -68,7 +68,7 @@ public class ProductImageService {
     public void deleteImage(Long imageId) {
         ProductImage findProductImage = findProductImageByIdOrElseThrow(imageId);
 
-        findProductImage.delete();
+        productImageRepository.delete(findProductImage);
     }
 
     public ProductImage findProductImageByIdOrElseThrow(Long imageId){
