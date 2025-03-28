@@ -55,7 +55,7 @@ public class ReviewController {
 
     // 리뷰 다건 조회
     @GetMapping("/v1/products/{productId}/reviews")
-    public ResponseEntity<Page<ReviewsGetResponseDto>> getReviews(
+    public ResponseEntity<Page<ReviewsGetResponseDto>> findReviews(
             @PathVariable Long productId,
             @RequestParam(required = false, defaultValue = "score") String orderBy,
             @RequestParam(defaultValue = "0") int page,
@@ -63,7 +63,7 @@ public class ReviewController {
     ){
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, orderBy));
 
-        Page<ReviewsGetResponseDto> reviews = reviewService.findReviews(productId, pageRequest);
+        Page<ReviewsGetResponseDto> reviews = reviewService.getReviews(productId, pageRequest);
 
         return ResponseEntity.ok(reviews);
     }

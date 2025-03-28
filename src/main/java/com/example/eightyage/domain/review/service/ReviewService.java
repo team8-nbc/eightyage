@@ -80,7 +80,7 @@ public class ReviewService {
 
     // 리뷰 다건 조회
     @Transactional(readOnly = true)
-    public Page<ReviewsGetResponseDto> findReviews(Long productId, PageRequest pageRequest) {
+    public Page<ReviewsGetResponseDto> getReviews(Long productId, PageRequest pageRequest) {
         Page<Review> reviewPage = reviewRepository.findByProductIdAndProductDeletedAtIsNull(productId, pageRequest);
 
         return reviewPage.map(review -> ReviewsGetResponseDto.builder()
