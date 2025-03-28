@@ -24,7 +24,7 @@ public class SearchServiceV3 {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveSearchLog(String keyword) {
         if (StringUtils.hasText(keyword)) {
-            searchLogRepository.save(SearchLog.of(keyword));
+            searchLogRepository.save(SearchLog.keywordOf(keyword));
         }
     }
 
