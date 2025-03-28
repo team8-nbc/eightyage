@@ -5,13 +5,13 @@ import com.example.eightyage.domain.review.repository.ReviewBulkRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-@Profile(value = "ci")
+@ActiveProfiles("ci")
 public class ReviewBulkTest {
 
     @Autowired
