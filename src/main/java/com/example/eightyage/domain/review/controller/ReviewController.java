@@ -54,9 +54,9 @@ public class ReviewController {
     }
 
     // 리뷰 다건 조회
-    @GetMapping("/v1/products/{productId}/reviews")
+    @GetMapping("/v1/reviews")
     public ResponseEntity<Page<ReviewsGetResponseDto>> findReviews(
-            @PathVariable Long productId,
+            @RequestParam(required = true) Long productId,
             @RequestParam(required = false, defaultValue = "score") String orderBy,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
