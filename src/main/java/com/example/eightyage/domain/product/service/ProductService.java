@@ -113,7 +113,8 @@ public class ProductService {
         Page<Product> products = productRepository.findProducts(productName, category, pageable);
 
         if (StringUtils.hasText(productName) && !products.isEmpty()) {
-            searchServiceV2.logAndCountKeyword(productName); // 로그 저장 + 캐시 작업
+            searchServiceV2.saveSearchLog(productName); // 로그 저장
+            searchServiceV2.increaseKeywordCount(productName); // 캐시 작업
         }
 
         return products.map(ProductSearchResponseDto::from);
