@@ -1,27 +1,26 @@
 package com.example.eightyage.domain.product.dto.response;
 
-import com.example.eightyage.domain.product.entity.Product;
+import com.example.eightyage.domain.product.entity.Category;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
+@NoArgsConstructor
 public class ProductSearchResponseDto {
-    private final String productName;
-    private final String category;
-    private final Integer price;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private String name;
+    private Category category;
+    private Integer price;
 
-    public static ProductSearchResponseDto from(Product product) {
-        return ProductSearchResponseDto.builder()
-                .productName(product.getName())
-                .category(product.getCategory().toString())
-                .price(product.getPrice())
-                .createdAt(product.getCreatedAt())
-                .updatedAt(product.getModifiedAt())
-                .build();
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "0.0")
+    private Double scoreAvg;
+
+    public ProductSearchResponseDto(String name, Category category, Integer price, Double scoreAvg) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.scoreAvg = scoreAvg;
     }
 }

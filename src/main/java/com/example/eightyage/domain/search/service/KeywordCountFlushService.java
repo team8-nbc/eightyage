@@ -45,8 +45,11 @@ public class KeywordCountFlushService {
 
             // 반복문을 이용하여 저장하기
             for (String keyword : keywordSet) {
-                Long count = countCache.get(keyword, Long.class);
-                if (count == null || count == 0L) continue;
+                String countStr = countCache.get(keyword, String.class);
+                if (countStr == null) continue;
+
+                Long count = Long.parseLong(countStr);
+                if (count == 0L) continue;
 
                 keywordCountRepository.findById(keyword)
                         .ifPresentOrElse(
