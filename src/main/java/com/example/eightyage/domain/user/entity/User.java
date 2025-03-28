@@ -26,6 +26,9 @@ public class User extends TimeStamped {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime deletedAt;
+
     @Builder
     public User(Long id, String email, String nickname, String password, UserRole userRole) {
         this.id = id;
@@ -45,6 +48,6 @@ public class User extends TimeStamped {
     }
 
     public void deleteUser() {
-        setDeletedAt(LocalDateTime.now());
+        this.deletedAt = LocalDateTime.now();
     }
 }

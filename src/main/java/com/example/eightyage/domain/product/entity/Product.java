@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,9 @@ public class Product extends TimeStamped {
 
     @OneToMany(mappedBy = "product")
     private List<Review> reviews = new ArrayList<>();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime deletedAt;
 
     @Builder
     public Product(String name, Category category, String content, Integer price, SaleState saleState) {
@@ -76,5 +80,9 @@ public class Product extends TimeStamped {
         if (newSaleState != null) {
             this.saleState = newSaleState;
         }
+    }
+
+    public void deleteProduct() {
+        this.deletedAt = LocalDateTime.now();
     }
 }

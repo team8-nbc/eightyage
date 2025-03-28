@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
 
-    @Query("SELECT pi FROM ProductImage pi WHERE pi.id = :imageId AND pi.deletedAt IS NULL")
+    @Query("SELECT pi FROM ProductImage pi WHERE pi.id = :imageId")
     Optional<ProductImage> findById(Long imageId);
 }
