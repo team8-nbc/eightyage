@@ -1,7 +1,6 @@
 package com.example.eightyage.domain.product.repository;
 
 import com.example.eightyage.domain.product.entity.ProductImage;
-import com.example.eightyage.global.exception.NotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
