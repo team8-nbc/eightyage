@@ -37,24 +37,6 @@ spring:
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-  cloud:
-    aws:
-      credentials:
-        access-key: ${AWS_ACCESS_KEY}
-        secret-key: ${AWS_SECRET_KEY}
-      region:
-        static: ap-northeast-2
-      s3:
-        bucket: my-gom-bucket
-
-aws:
-  credentials:
-    access-key: ${AWS_ACCESS_KEY}
-    secret-key: ${AWS_SECRET_KEY}
-  region: ap-northeast-2
-  s3:
-    bucket: my-gom-bucket
-
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
