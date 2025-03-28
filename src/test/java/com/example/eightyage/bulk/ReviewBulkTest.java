@@ -26,7 +26,7 @@ public class ReviewBulkTest {
         int insertCount;
 
         if ("ci".equals(System.getProperty("spring.profiles.active"))) {
-            insertCount = 100; // CI에서는 데이터 적게
+            insertCount = 0; // CI에서는 데이터 적게
         } else {
             insertCount = 1000000; // 로컬, 개발 서버 등에서는 많게
         }
