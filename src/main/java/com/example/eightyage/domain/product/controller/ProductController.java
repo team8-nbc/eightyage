@@ -74,6 +74,17 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsV2(name, category, size, page));
     }
 
+    // 제품 다건 조회 version 3
+    @GetMapping("/v3/products")
+    public ResponseEntity<Page<ProductSearchResponseDto>> searchProductV3(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Category category,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        return ResponseEntity.ok(productService.getProductsV3(name, category, size, page));
+    }
+
     // 제품 삭제
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/v1/products/{productId}")
