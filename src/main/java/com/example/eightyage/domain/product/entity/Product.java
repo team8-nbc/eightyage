@@ -1,20 +1,21 @@
 package com.example.eightyage.domain.product.entity;
 
+import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "product")
+@Table(name = "product",
+        indexes = @Index(name = "index_saleState_category_name", columnList = "saleState, category, name")
+)
 public class Product extends TimeStamped {
 
     @Id
@@ -33,6 +34,10 @@ public class Product extends TimeStamped {
     @Enumerated(EnumType.STRING)
     private SaleState saleState;
 
+    @OneToMany(mappedBy = "product")
+    private List<Review> reviews = new ArrayList<>();
+
+    @Builder
     public Product(String name, Category category, String content, Integer price, SaleState saleState) {
         this.name = name;
         this.category = category;
