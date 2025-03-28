@@ -55,8 +55,6 @@ class ProductServiceTest {
     @Test
     void 제품_생성_성공(){
         // given
-        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE);
-
         given(productRepository.save(any())).willReturn(product);
 
         ProductSaveRequestDto requestDto = new ProductSaveRequestDto("8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴줍니다.", 20000);
@@ -72,8 +70,11 @@ class ProductServiceTest {
     void 제품_수정_성공(){
         // given
         Long productId = 1L;
+        List<Review> reviewList = new ArrayList<>();
+        reviewList.add(review1);
+        reviewList.add(review2);
 
-        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE);
+        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE, reviewList);
 
         given(productRepository.findById(any(Long.class))).willReturn(Optional.of(product));
 
