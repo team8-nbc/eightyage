@@ -1,6 +1,10 @@
 package com.example.eightyage.domain.product.service;
 
+import com.example.eightyage.domain.product.dto.request.ProductSaveRequestDto;
+import com.example.eightyage.domain.product.dto.request.ProductUpdateRequestDto;
 import com.example.eightyage.domain.product.dto.response.ProductGetResponseDto;
+import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
+import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
 import com.example.eightyage.domain.product.entity.Category;
 import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.entity.SaleState;
@@ -49,11 +53,43 @@ class ProductServiceTest {
     private Review review2;
 
     @Test
-    void 제품_단건_조회_성공(){
+    void 제품_생성_성공(){
+        // given
+        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE);
+
+        given(productRepository.save(any())).willReturn(product);
+
+        ProductSaveRequestDto requestDto = new ProductSaveRequestDto("8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴줍니다.", 20000);
+
+        // when
+        ProductSaveResponseDto savedProduct = productService.saveProduct(requestDto);
+
+        // then
+        assertThat(savedProduct.getProductName()).isEqualTo(product.getName());
+    }
+
+    @Test
+    void 제품_수정_성공(){
         // given
         Long productId = 1L;
 
-//        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE);
+        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE);
+
+        given(productRepository.findById(any(Long.class))).willReturn(Optional.of(product));
+
+        ProductUpdateRequestDto requestDto = new ProductUpdateRequestDto("8자 주름 향수", Category.FRAGRANCE, "8자 주름의 은은한 향기", SaleState.FOR_SALE, 50000);
+
+        // when
+        ProductUpdateResponseDto responseDto = productService.updateProduct(productId, requestDto);
+
+        // then
+        assertThat(responseDto.getProductName()).isEqualTo(requestDto.getProductName());
+    }
+
+    @Test
+    void 제품_단건_조회_성공(){
+        // given
+        Long productId = 1L;
 
         given(productRepository.findById(any(Long.class))).willReturn(Optional.of(product));
 
