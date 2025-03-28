@@ -47,18 +47,17 @@ public class CouponService {
                 throw new BadRequestException(ErrorMessage.CAN_NOT_ACCESS.getMessage()); // 락 획득 실패
             }
 
-            // 락 획득 -> 임계 구역 진입
-            // 쿠폰 수량 우선 차감
-            Long remain = stringRedisTemplate.opsForValue().decrement(EVENT_QUANTITIY_PREFIX + eventId);
-            if (remain == 0 || remain < 0) {
-                throw new BadRequestException(ErrorMessage.COUPON_OUT_OF_STOCK.getMessage());
-            }
-
             Event event = eventService.getValidEventOrThrow(eventId);
 
             if (couponRepository.existsByUserIdAndEventId(authUser.getUserId(), eventId)) {
                 throw new BadRequestException(ErrorMessage.COUPON_ALREADY_ISSUED.getMessage());
             }
+
+            Long remain = Long.parseLong(stringRedisTemplate.opsForValue().get(EVENT_QUANTITIY_PREFIX + eventId));
+            if (remain == 0 || remain < 0) {
+                throw new BadRequestException(ErrorMessage.COUPON_OUT_OF_STOCK.getMessage());
+            }
+            stringRedisTemplate.opsForValue().decrement(EVENT_QUANTITIY_PREFIX + eventId);
 
             // 쿠폰 발급 및 저장
             Coupon coupon = Coupon.create(User.fromAuthUser(authUser),event);

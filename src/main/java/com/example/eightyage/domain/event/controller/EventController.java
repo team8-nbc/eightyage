@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +17,7 @@ public class EventController {
 
     private final EventService eventService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/v1/events")
     public ResponseEntity<EventResponseDto> createEvent(@Valid @RequestBody EventRequestDto eventRequestDto) {
         return ResponseEntity.ok(eventService.saveEvent(eventRequestDto));
@@ -31,6 +33,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.getEvent(eventId));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/v1/events/{eventId}")
     public ResponseEntity<EventResponseDto> updateEvent(@PathVariable long eventId, @Valid @RequestBody EventRequestDto eventRequestDto) {
         return ResponseEntity.ok(eventService.updateEvent(eventId, eventRequestDto));

@@ -24,7 +24,6 @@ public class EventService {
     private final EventRepository eventRepository;
     private final StringRedisTemplate stringRedisTemplate;
 
-    @Secured("ADMIN")
     public EventResponseDto saveEvent(EventRequestDto eventRequestDto) {
         Event event = new Event(
                 eventRequestDto.getName(),
@@ -61,7 +60,6 @@ public class EventService {
         return event.toDto();
     }
 
-    @Secured("ADMIN")
     public EventResponseDto updateEvent(long eventId, EventRequestDto eventRequestDto) {
         Event event = findByIdOrElseThrow(eventId);
 
