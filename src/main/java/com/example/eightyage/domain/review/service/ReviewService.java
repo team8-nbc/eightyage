@@ -61,8 +61,8 @@ public class ReviewService {
         Review findReview = findReviewByIdOrElseThrow(reviewId);
 
         if(findUser.getId().equals(findReview.getUser().getId())){
-            findReview.updateScore(requestDto.getScore());
-            findReview.updateContent(requestDto.getContent());
+            findReview.updateScoreIfNotNull(requestDto.getScore());
+            findReview.updateContentIfNotNull(requestDto.getContent());
         } else {
             throw new UnauthorizedException("리뷰를 수정할 권한이 없습니다.");
         }

@@ -39,13 +39,13 @@ public class Review extends TimeStamped {
         this.content = content;
     }
 
-    public void updateScore(Double newScore){
+    public void updateScoreIfNotNull(Double newScore){
         if(newScore != null){
             this.score = newScore;
         }
     }
 
-    public void updateContent(String newContent){
+    public void updateContentIfNotNull(String newContent){
         if(newContent != null){
             this.content = newContent;
         }
