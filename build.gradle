@@ -54,11 +54,10 @@ dependencies {
     // env
     implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 
-    // redis
+    // redis & redisson
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson:3.23.5'
 
-    // env
-    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 }
 
 tasks.named('test') {
