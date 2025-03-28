@@ -31,6 +31,6 @@ public class SearchServiceV3 {
     // 검색어 점수 증가
     public void increaseSortedKeywordRank(String productName) {
         redisTemplate.opsForZSet().incrementScore(RANKING_KEY, productName, 1);
-        redisTemplate.expire(RANKING_KEY, Duration.ofMinutes(1));
+        redisTemplate.expire(RANKING_KEY, Duration.ofMinutes(5));
     }
 }
