@@ -40,7 +40,7 @@ spring:
       region:
         static: ap-northeast-2
       s3:
-        bucket: my-gom-bucket
+        bucket: ${S3_BUCKET}
 
 aws:
   credentials:
@@ -48,11 +48,11 @@ aws:
     secret-key: ${S3_SECRET_KEY}
   region: ap-northeast-2
   s3:
-    bucket: my-gom-bucket
+    bucket: ${S3_BUCKET}
 
   data:
     redis:
-      host: localhost
+      host: ${REDIS_HOST}
       port: 6379
 
 jwt:
