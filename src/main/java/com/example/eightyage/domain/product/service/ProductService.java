@@ -11,6 +11,7 @@ import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
 import com.example.eightyage.domain.search.service.v1.SearchServiceV1;
 import com.example.eightyage.domain.search.service.v2.SearchServiceV2;
+import com.example.eightyage.domain.search.service.v3.SearchServiceV3;
 import com.example.eightyage.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ public class ProductService {
     private final ReviewRepository reviewRepository;
     private final SearchServiceV1 searchServiceV1;
     private final SearchServiceV2 searchServiceV2;
+    private final SearchServiceV3 searchServiceV3;
 
     // 제품 생성
     @Transactional
@@ -116,13 +118,27 @@ public class ProductService {
         return productsResponse;
     }
 
+    // 제품 다건 조회 version 3
+    @Transactional(readOnly = true)
+    public Page<ProductSearchResponseDto> getProductsV3(String productName, Category category, int size, int page) {
+        int adjustedPage = Math.max(0, page - 1);
+        Pageable pageable = PageRequest.of(adjustedPage, size);
+        Page<ProductSearchResponseDto> productsResponse = productRepository.findProductsOrderByReviewScore(productName, category, pageable);
+
+        if(StringUtils.hasText(productName) && !productsResponse.isEmpty()){
+            searchServiceV3.saveSearchLog(productName);
+            searchServiceV3.increaseSortedKeywordRank(productName);
+        }
+        return productsResponse;
+    }
+
     // 제품 삭제
     @Transactional
     public void deleteProduct(Long productId) {
         Product findProduct = findProductByIdOrElseThrow(productId);
         List<Review> findReviewList = reviewRepository.findReviewsByProductId(productId);
 
-        for(Review review : findReviewList){
+        for (Review review : findReviewList) {
             review.delete();
         }
 
@@ -134,4 +150,6 @@ public class ProductService {
                 () -> new NotFoundException("해당 제품이 존재하지 않습니다.")
         );
     }
+
+
 }

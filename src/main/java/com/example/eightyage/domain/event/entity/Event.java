@@ -60,4 +60,13 @@ public class Event extends TimeStamped {
         this.startDate = eventRequestDto.getStartDate();
         this.endDate = eventRequestDto.getEndDate();
     }
+
+    public boolean isValidAt(LocalDateTime time) {
+        return (startDate.isBefore(time) || startDate.isEqual(time)) && (endDate.isAfter(time) || endDate.isEqual(time));
+    }
+
+    public void updateStateAt(LocalDateTime time) {
+        EventState newState = isValidAt(time) ? EventState.VALID : EventState.INVALID;
+        this.state = newState;
+    }
 }

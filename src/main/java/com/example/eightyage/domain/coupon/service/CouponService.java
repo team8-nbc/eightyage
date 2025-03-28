@@ -13,11 +13,15 @@ import com.example.eightyage.global.exception.ErrorMessage;
 import com.example.eightyage.global.exception.ForbiddenException;
 import com.example.eightyage.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -27,25 +31,48 @@ public class CouponService {
     private final EventService eventService;
     private final StringRedisTemplate stringRedisTemplate;
 
+    private static final String EVENT_QUANTITIY_PREFIX = "event:quantity:";
+    private static final String EVENT_LOCK_PREFIX = "event:lock:";
+    private final RedissonClient redissonClient;
+
     public CouponResponseDto issueCoupon(AuthUser authUser, Long eventId) {
-        // 수량 우선 차감
-        Long remain = stringRedisTemplate.opsForValue().decrement("event:quantity:" + eventId);
-        if (remain == null || remain < 0) { // atomic? `DESC`?
-            throw new BadRequestException(ErrorMessage.COUPON_OUT_OF_STOCK.getMessage());
+
+        RLock rLock = redissonClient.getLock(EVENT_LOCK_PREFIX + eventId);
+        boolean isLocked = false;
+
+        try {
+            isLocked = rLock.tryLock(3, 10, TimeUnit.SECONDS);  // 3초 안에 락을 획득, 10초 뒤에는 자동 해제
+
+            if (!isLocked) {
+                throw new BadRequestException(ErrorMessage.CAN_NOT_ACCESS.getMessage()); // 락 획득 실패
+            }
+
+            Event event = eventService.getValidEventOrThrow(eventId);
+
+            if (couponRepository.existsByUserIdAndEventId(authUser.getUserId(), eventId)) {
+                throw new BadRequestException(ErrorMessage.COUPON_ALREADY_ISSUED.getMessage());
+            }
+
+            Long remain = Long.parseLong(stringRedisTemplate.opsForValue().get(EVENT_QUANTITIY_PREFIX + eventId));
+            if (remain == 0 || remain < 0) {
+                throw new BadRequestException(ErrorMessage.COUPON_OUT_OF_STOCK.getMessage());
+            }
+            stringRedisTemplate.opsForValue().decrement(EVENT_QUANTITIY_PREFIX + eventId);
+
+            // 쿠폰 발급 및 저장
+            Coupon coupon = Coupon.create(User.fromAuthUser(authUser),event);
+            couponRepository.save(coupon);
+
+            return coupon.toDto();
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new BadRequestException(ErrorMessage.INTERNAL_SERVER_ERROR.getMessage());
+        } finally {
+            if (isLocked) {
+                rLock.unlock();
+            }
         }
-
-        Event event = eventService.getValidEventOrThrow(eventId);
-
-        if(couponRepository.existsByUserIdAndEventId(authUser.getUserId(), eventId)) {
-            throw new BadRequestException(ErrorMessage.COUPON_ALREADY_ISSUED.getMessage());
-        }
-
-        // 쿠폰 발급 및 저장
-        Coupon coupon = Coupon.create(User.fromAuthUser(authUser),event);
-
-        couponRepository.save(coupon);
-
-        return coupon.toDto();
     }
 
     public Page<CouponResponseDto> getMyCoupons(AuthUser authUser, int page, int size) {
