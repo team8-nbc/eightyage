@@ -76,7 +76,7 @@ public class ProductService {
 
     // 제품 단건 조회
     @Transactional(readOnly = true)
-    public ProductGetResponseDto findProductById(Long productId) {
+    public ProductGetResponseDto getProductById(Long productId) {
         Product findProduct = findProductByIdOrElseThrow(productId);
 
         return ProductGetResponseDto.builder()

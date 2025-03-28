@@ -46,8 +46,8 @@ public class ProductController {
 
     // 제품 단건 조회
     @GetMapping("/v1/products/{productId}")
-    public ResponseEntity<ProductGetResponseDto> getProduct(@PathVariable Long productId){
-        ProductGetResponseDto responseDto = productService.findProductById(productId);
+    public ResponseEntity<ProductGetResponseDto> findProduct(@PathVariable Long productId){
+        ProductGetResponseDto responseDto = productService.getProductById(productId);
 
         return ResponseEntity.ok(responseDto);
     }
