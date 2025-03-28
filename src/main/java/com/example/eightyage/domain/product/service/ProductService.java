@@ -101,18 +101,6 @@ public class ProductService {
         return productsResponse;
     }
 
-    // 제품 다건 조회 version 3
-    @Transactional(readOnly = true)
-    public Page<ProductSearchResponseDto> getProductsV3(String productName, Category category, int size, int page) {
-        int adjustedPage = Math.max(0, page - 1);
-        Pageable pageable = PageRequest.of(adjustedPage, size);
-        Page<ProductSearchResponseDto> productsResponse = productRepository.findProductsOrderByReviewScore(productName, category, pageable);
-        if (StringUtils.hasText(productName) && !productsResponse.isEmpty()) {
-            searchServiceV1.saveSearchLog(productName); // 로그만 저장
-        }
-        return productsResponse;
-    }
-
     // 제품 다건 조회 version 2
     @Transactional(readOnly = true)
     public Page<ProductSearchResponseDto> getProductsV2(String productName, Category category, int size, int page) {
@@ -121,7 +109,8 @@ public class ProductService {
         Page<ProductSearchResponseDto> productsResponse = productRepository.findProductsOrderByReviewScore(productName, category, pageable);
 
         if (StringUtils.hasText(productName) && !productsResponse.isEmpty()) {
-            searchServiceV2.logAndCountKeyword(productName); // 로그 저장 + 캐시 작업
+            searchServiceV2.saveSearchLog(productName); // 로그 저장
+            searchServiceV2.increaseKeywordCount(productName); // 캐시 작업
         }
 
         return productsResponse;

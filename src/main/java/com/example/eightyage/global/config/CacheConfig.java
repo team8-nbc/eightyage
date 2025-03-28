@@ -1,51 +1,41 @@
 package com.example.eightyage.global.config;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 @EnableCaching
 @Configuration
 public class CacheConfig {
 
     @Bean
-    public CacheManager cacheManager() {
-        SimpleCacheManager cacheManager = new SimpleCacheManager();
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        // 기본 캐시 설정
+        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
-        // 키워드를 카운팅하는 캐시
-        CaffeineCache keywordCountMap = new CaffeineCache(
-                "keywordCountMap",
-                Caffeine.newBuilder()
-                        .maximumSize(10000)
-                        .build()
-        );
+        // 캐시 별로 TTL 설정
+        Map<String, RedisCacheConfiguration> configMap = new HashMap<>();
+        configMap.put("keywordCountMap", defaultConfig.entryTtl(Duration.ZERO));
+        configMap.put("keywordKeySet", defaultConfig.entryTtl(Duration.ZERO));
+        configMap.put("popularKeywords", defaultConfig.entryTtl(Duration.ofMinutes(5)));
 
-        // 인기 검색어를 조회하는 캐시
-        CaffeineCache popularKeywords = new CaffeineCache(
-                "popularKeywords",
-                Caffeine.newBuilder()
-                        .maximumSize(365) // days 값 기준으로 최대 365개
-                        .expireAfterWrite(5, TimeUnit.MINUTES) // TTL 5분
-                        .build()
-        );
-
-        // 현재 캐시에 저장된 키워드 목록
-        CaffeineCache keywordKeySet = new CaffeineCache(
-                "keywordKeySet",
-                Caffeine.newBuilder()
-                        .maximumSize(1)
-                        .build()
-        );
-
-        cacheManager.setCaches(Arrays.asList(keywordCountMap, popularKeywords, keywordKeySet));
-        return cacheManager;
+        return RedisCacheManager.builder(redisConnectionFactory)
+                .cacheDefaults(defaultConfig)
+                .withInitialCacheConfigurations(configMap)
+                .build();
     }
 
 }
