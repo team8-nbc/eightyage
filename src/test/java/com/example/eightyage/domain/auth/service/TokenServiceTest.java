@@ -3,7 +3,7 @@ package com.example.eightyage.domain.auth.service;
 import com.example.eightyage.domain.auth.entity.RefreshToken;
 import com.example.eightyage.domain.auth.repository.RefreshTokenRepository;
 import com.example.eightyage.domain.user.entity.User;
-import com.example.eightyage.domain.user.entity.UserRole;
+import com.example.eightyage.domain.user.userrole.UserRole;
 import com.example.eightyage.domain.user.service.UserService;
 import com.example.eightyage.global.exception.NotFoundException;
 import com.example.eightyage.global.exception.UnauthorizedException;

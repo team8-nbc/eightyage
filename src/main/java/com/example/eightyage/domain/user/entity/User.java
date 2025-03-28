@@ -1,5 +1,6 @@
 package com.example.eightyage.domain.user.entity;
 
+import com.example.eightyage.domain.user.userrole.UserRole;
 import com.example.eightyage.global.dto.AuthUser;
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;
