@@ -138,11 +138,9 @@ public class ProductService {
         Product findProduct = findProductByIdOrElseThrow(productId);
         List<Review> findReviewList = reviewRepository.findReviewsByProductId(productId);
 
-        for (Review review : findReviewList) {
-            review.delete();
-        }
+        reviewRepository.deleteAll(findReviewList);
 
-        findProduct.delete();
+        findProduct.deleteProduct();
     }
 
     public Product findProductByIdOrElseThrow(Long productId) {
@@ -150,6 +148,4 @@ public class ProductService {
                 () -> new NotFoundException("해당 제품이 존재하지 않습니다.")
         );
     }
-
-
 }

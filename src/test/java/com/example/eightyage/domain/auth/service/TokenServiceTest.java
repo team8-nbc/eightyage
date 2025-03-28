@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.example.eightyage.domain.auth.entity.TokenState.INVALIDATED;
+import static com.example.eightyage.domain.auth.tokenstate.TokenState.INVALIDATED;
 import static com.example.eightyage.global.exception.ErrorMessage.EXPIRED_REFRESH_TOKEN;
 import static com.example.eightyage.global.exception.ErrorMessage.REFRESH_TOKEN_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
@@ -120,7 +120,7 @@ public class TokenServiceTest {
         RefreshToken mockRefreshToken = mock(RefreshToken.class);
 
         given(refreshTokenRepository.findByToken(any(String.class))).willReturn(Optional.of(mockRefreshToken));
-        given(userService.findUserByIdOrElseThrow(mockRefreshToken.getUserId())).willReturn(user);
+        given(userService.findUserByIdOrElseThrow(anyLong())).willReturn(user);
 
         // when
         User result = tokenService.reissueToken(refreshToken);
