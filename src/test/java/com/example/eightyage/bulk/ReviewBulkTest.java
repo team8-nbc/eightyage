@@ -26,7 +26,7 @@
 //        int insertCount;
 //
 //        if ("ci".equals(System.getProperty("spring.profiles.active"))) {
-//            insertCount = 0; // CI에서는 데이터 적게
+//            insertCount = 100; // CI에서는 데이터 적게
 //        } else {
 //            insertCount = 1000000; // 로컬, 개발 서버 등에서는 많게
 //        }
@@ -41,7 +41,7 @@
 //            Review review = new Review(user, product, random.nextDouble() * 5, "content" + i);
 //            batchList.add(review);
 //
-//            if (batchList.size() == insertCount) {
+//            if (batchList.size() == insertCount / 100) {
 //                reviewBulkRepository.bulkInsertReviews(batchList);
 //                batchList.clear();
 //
