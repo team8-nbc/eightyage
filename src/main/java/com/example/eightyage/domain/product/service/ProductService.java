@@ -57,11 +57,11 @@ public class ProductService {
     public ProductUpdateResponseDto updateProduct(Long productId, ProductUpdateRequestDto requestDto) {
         Product findProduct = findProductByIdOrElseThrow(productId);
 
-        findProduct.updateName(requestDto.getProductName());
-        findProduct.updateCategory(requestDto.getCategory());
-        findProduct.updateContent(requestDto.getContent());
-        findProduct.updateSaleState(requestDto.getSaleState());
-        findProduct.updatePrice(requestDto.getPrice());
+        findProduct.updateNameIfNotNull(requestDto.getProductName());
+        findProduct.updateCategoryIfNotNull(requestDto.getCategory());
+        findProduct.updateContentIfNotNull(requestDto.getContent());
+        findProduct.updateSaleStateIfNotNull(requestDto.getSaleState());
+        findProduct.updatePriceIfNotNull(requestDto.getPrice());
 
         return ProductUpdateResponseDto.builder()
                 .productName(findProduct.getName())

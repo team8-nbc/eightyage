@@ -52,31 +52,31 @@ public class Product extends TimeStamped {
         this.saleState = saleState;
     }
 
-    public void updateName(String newName){
+    public void updateNameIfNotNull(String newName){
         if(newName != null){
             this.name = newName;
         }
     }
 
-    public void updateCategory(Category newCategory) {
+    public void updateCategoryIfNotNull(Category newCategory) {
         if (newCategory != null) {
             this.category = newCategory;
         }
     }
 
-    public void updateContent(String newContent) {
+    public void updateContentIfNotNull(String newContent) {
         if (newContent != null) {
             this.content = newContent;
         }
     }
 
-    public void updatePrice(Integer newPrice) {
+    public void updatePriceIfNotNull(Integer newPrice) {
         if (newPrice != null) {
             this.price = newPrice;
         }
     }
 
-    public void updateSaleState(SaleState newSaleState) {
+    public void updateSaleStateIfNotNull(SaleState newSaleState) {
         if (newSaleState != null) {
             this.saleState = newSaleState;
         }
