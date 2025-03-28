@@ -12,24 +12,24 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
-@Profile(value = "test")
+@Profile(value = "ci")
 public class ProductBulkTest {
 
     @Autowired
     private ProductBulkRepository productBulkRepository;
 
     @Test
-    void 제품_데이터_백만건_생성() {
+    void 제품_더미데이터_생성() {
 
         List<Product> batchList = new ArrayList<>();
 
-        for (int i = 0; i < 50_000; i++) {
+        for (int i = 0; i < 1000; i++) {
             Product product = Product.builder()
                     .name(UUID.randomUUID().toString())
                     .build();
             batchList.add(product);
 
-            if (batchList.size() == 50) {
+            if (batchList.size() == 1000) {
                 productBulkRepository.bulkInsertProduct(batchList);
                 batchList.clear();
 

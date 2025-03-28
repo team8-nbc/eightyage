@@ -22,7 +22,7 @@ public class ReviewBulkRepository {
 
         jdbcTemplate.batchUpdate(sql, reviews, BATCH_SIZE, (ps, argument) -> {
             ps.setInt(1, 1);
-            ps.setInt(2, random.nextInt(100000) + 1);
+            ps.setInt(2, random.nextInt(1000) + 1);
             ps.setDouble(3, random.nextDouble() * 5);
         });
     }

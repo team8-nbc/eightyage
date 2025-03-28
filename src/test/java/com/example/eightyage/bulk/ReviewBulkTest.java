@@ -11,22 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-@Profile(value = "test")
+@Profile(value = "ci")
 public class ReviewBulkTest {
 
     @Autowired
     private ReviewBulkRepository reviewBulkRepository;
 
     @Test
-    void 리뷰_데이터_오백만건_생성() {
+    void 리뷰_더미데이터_생성() {
 
         List<Review> batchList = new ArrayList<>();
 
-        for (int i = 0; i < 5_000_000; i++) {
+        for (int i = 0; i < 1000; i++) {
             Review review = new Review();
             batchList.add(review);
 
-            if (batchList.size() == 5000) {
+            if (batchList.size() == 1000) {
                 reviewBulkRepository.bulkInsertReviews(batchList);
                 batchList.clear();
 

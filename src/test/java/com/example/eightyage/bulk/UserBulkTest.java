@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-@Profile(value = "test")
+@Profile(value = "ci")
 public class UserBulkTest {
 
     @Autowired
@@ -23,7 +23,7 @@ public class UserBulkTest {
 
         List<User> batchList = new ArrayList<>();
 
-        for (int i = 0; i < 1_000_000; i++) {
+        for (int i = 0; i < 1000; i++) {
             User user = User.builder()
                     .email(i + "@email.com")
                     .nickname("nickname" + i)
