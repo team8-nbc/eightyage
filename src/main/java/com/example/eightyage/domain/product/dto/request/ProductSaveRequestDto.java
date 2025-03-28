@@ -1,6 +1,6 @@
 package com.example.eightyage.domain.product.dto.request;
 
-import com.example.eightyage.domain.product.entity.Category;
+import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.global.dto.ValidationMessage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

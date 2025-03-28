@@ -1,5 +1,7 @@
 package com.example.eightyage.domain.product.entity;
 
+import com.example.eightyage.domain.product.category.Category;
+import com.example.eightyage.domain.product.salestate.SaleState;
 import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.global.entity.TimeStamped;
 import jakarta.persistence.*;

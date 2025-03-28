@@ -6,7 +6,7 @@ import com.example.eightyage.domain.product.dto.response.ProductGetResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductSearchResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
-import com.example.eightyage.domain.product.entity.Category;
+import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
