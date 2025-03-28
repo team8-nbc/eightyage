@@ -12,18 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class ProductSaveResponseDto {
-
     private final String productName;
-
     private final Category category;
-
     private final Integer price;
-
     private final String content;
-
     private final SaleState saleState;
-
     private final LocalDateTime createdAt;
-
     private final LocalDateTime modifiedAt;
 }
