@@ -7,8 +7,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ReviewUpdateRequestDto {
-
     private Double score;
-
     private String content;
 }
