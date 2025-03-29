@@ -3,9 +3,11 @@ package com.example.eightyage.domain.product.service;
 import com.example.eightyage.domain.product.dto.request.ProductSaveRequestDto;
 import com.example.eightyage.domain.product.dto.request.ProductUpdateRequestDto;
 import com.example.eightyage.domain.product.dto.response.*;
-import com.example.eightyage.domain.product.entity.Category;
+import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.entity.Product;
-import com.example.eightyage.domain.product.entity.SaleState;
+import com.example.eightyage.domain.product.entity.ProductImage;
+import com.example.eightyage.domain.product.repository.ProductImageRepository;
+import com.example.eightyage.domain.product.salestate.SaleState;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
@@ -30,6 +32,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
+    private final ProductImageRepository productImageRepository;
     private final SearchServiceV1 searchServiceV1;
     private final SearchServiceV2 searchServiceV2;
     private final SearchServiceV3 searchServiceV3;
@@ -57,11 +60,11 @@ public class ProductService {
     public ProductUpdateResponseDto updateProduct(Long productId, ProductUpdateRequestDto requestDto) {
         Product findProduct = findProductByIdOrElseThrow(productId);
 
-        findProduct.updateName(requestDto.getProductName());
-        findProduct.updateCategory(requestDto.getCategory());
-        findProduct.updateContent(requestDto.getContent());
-        findProduct.updateSaleState(requestDto.getSaleState());
-        findProduct.updatePrice(requestDto.getPrice());
+        findProduct.updateNameIfNotNull(requestDto.getProductName());
+        findProduct.updateCategoryIfNotNull(requestDto.getCategory());
+        findProduct.updateContentIfNotNull(requestDto.getContent());
+        findProduct.updateSaleStateIfNotNull(requestDto.getSaleState());
+        findProduct.updatePriceIfNotNull(requestDto.getPrice());
 
         return ProductUpdateResponseDto.builder()
                 .productName(findProduct.getName())
@@ -76,8 +79,9 @@ public class ProductService {
 
     // 제품 단건 조회
     @Transactional(readOnly = true)
-    public ProductGetResponseDto findProductById(Long productId) {
+    public ProductGetResponseDto getProductById(Long productId) {
         Product findProduct = findProductByIdOrElseThrow(productId);
+        List<String> productImageList = productImageRepository.findProductImageByProductId(productId);
 
         return ProductGetResponseDto.builder()
                 .productName(findProduct.getName())
@@ -85,6 +89,7 @@ public class ProductService {
                 .category(findProduct.getCategory())
                 .price(findProduct.getPrice())
                 .saleState(findProduct.getSaleState())
+                .productImageList(productImageList)
                 .createdAt(findProduct.getCreatedAt())
                 .modifiedAt(findProduct.getModifiedAt())
                 .build();
@@ -137,11 +142,9 @@ public class ProductService {
         Product findProduct = findProductByIdOrElseThrow(productId);
         List<Review> findReviewList = reviewRepository.findReviewsByProductId(productId);
 
-        for (Review review : findReviewList) {
-            review.delete();
-        }
+        reviewRepository.deleteAll(findReviewList);
 
-        findProduct.delete();
+        findProduct.deleteProduct();
     }
 
     public Product findProductByIdOrElseThrow(Long productId) {
