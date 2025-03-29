@@ -5,6 +5,8 @@ import com.example.eightyage.domain.product.dto.request.ProductUpdateRequestDto;
 import com.example.eightyage.domain.product.dto.response.*;
 import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.entity.Product;
+import com.example.eightyage.domain.product.entity.ProductImage;
+import com.example.eightyage.domain.product.repository.ProductImageRepository;
 import com.example.eightyage.domain.product.salestate.SaleState;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.review.entity.Review;
@@ -30,6 +32,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
+    private final ProductImageRepository productImageRepository;
     private final SearchServiceV1 searchServiceV1;
     private final SearchServiceV2 searchServiceV2;
     private final SearchServiceV3 searchServiceV3;
@@ -78,6 +81,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductGetResponseDto getProductById(Long productId) {
         Product findProduct = findProductByIdOrElseThrow(productId);
+        List<String> productImageList = productImageRepository.findProductImageByProductId(productId);
 
         return ProductGetResponseDto.builder()
                 .productName(findProduct.getName())
@@ -85,6 +89,7 @@ public class ProductService {
                 .category(findProduct.getCategory())
                 .price(findProduct.getPrice())
                 .saleState(findProduct.getSaleState())
+                .productImageList(productImageList)
                 .createdAt(findProduct.getCreatedAt())
                 .modifiedAt(findProduct.getModifiedAt())
                 .build();
