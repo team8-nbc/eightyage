@@ -46,6 +46,10 @@ public class Product extends TimeStamped {
     @Column(nullable = true)
     private LocalDateTime deletedAt;
 
+    public Product(Long id) {
+        this.id = id;
+    }
+
     @Builder
     public Product(String name, Category category, String content, Integer price, SaleState saleState) {
         this.name = name;
