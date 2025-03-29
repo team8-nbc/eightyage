@@ -2,15 +2,12 @@ package com.example.eightyage.domain.coupon.controller;
 
 import com.example.eightyage.domain.coupon.dto.request.CouponRequestDto;
 import com.example.eightyage.domain.coupon.dto.response.CouponResponseDto;
-import com.example.eightyage.domain.coupon.dto.response.IssuedCouponResponseDto;
 import com.example.eightyage.domain.coupon.service.CouponService;
-import com.example.eightyage.global.dto.AuthUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

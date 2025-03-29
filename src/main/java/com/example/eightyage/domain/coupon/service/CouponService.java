@@ -8,7 +8,6 @@ import com.example.eightyage.domain.coupon.repository.CouponRepository;
 import com.example.eightyage.global.exception.BadRequestException;
 import com.example.eightyage.global.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +22,6 @@ public class CouponService {
 
     private final CouponRepository couponRepository;
     private final StringRedisTemplate stringRedisTemplate;
-    private final RedissonClient redissonClient;
-
-    private static final String EVENT_QUANTITIY_PREFIX = "event:quantity:";
-    private static final String EVENT_LOCK_PREFIX = "event:lock:";
 
     public CouponResponseDto saveCoupon(CouponRequestDto couponRequestDto) {
         Coupon coupon = new Coupon(
@@ -37,7 +32,7 @@ public class CouponService {
                 couponRequestDto.getEndDate()
         );
 
-        checkEventState(coupon);
+        checkCouponState(coupon);
 
         Coupon savedCoupon = couponRepository.save(coupon);
 
@@ -51,30 +46,30 @@ public class CouponService {
         Page<Coupon> events = couponRepository.findAll(pageable);
 
         // 모든 events들 checkState로 state 상태 갱신하기
-        events.forEach(this::checkEventState);
+        events.forEach(this::checkCouponState);
 
         return events.map(Coupon::toDto);
     }
 
-    public CouponResponseDto getCoupon(long eventId) {
-        Coupon coupon = findByIdOrElseThrow(eventId);
+    public CouponResponseDto getCoupon(long couponId) {
+        Coupon coupon = findByIdOrElseThrow(couponId);
 
-        checkEventState(coupon);
+        checkCouponState(coupon);
 
         return coupon.toDto();
     }
 
-    public CouponResponseDto updateCoupon(long eventId, CouponRequestDto couponRequestDto) {
-        Coupon coupon = findByIdOrElseThrow(eventId);
+    public CouponResponseDto updateCoupon(long couponId, CouponRequestDto couponRequestDto) {
+        Coupon coupon = findByIdOrElseThrow(couponId);
 
         coupon.update(couponRequestDto);
 
-        checkEventState(coupon);
+        checkCouponState(coupon);
 
         return coupon.toDto();
     }
 
-    private void checkEventState(Coupon coupon) {
+    private void checkCouponState(Coupon coupon) {
         CouponState prevState = coupon.getState();
         coupon.updateStateAt(LocalDateTime.now());
 
@@ -83,8 +78,8 @@ public class CouponService {
         }
     }
 
-    public Coupon getValidCouponOrThrow(Long eventId) {
-        Coupon coupon = findByIdOrElseThrow(eventId);
+    public Coupon getValidCouponOrThrow(Long couponId) {
+        Coupon coupon = findByIdOrElseThrow(couponId);
 
         coupon.updateStateAt(LocalDateTime.now());
 
@@ -95,8 +90,8 @@ public class CouponService {
         return coupon;
     }
 
-    public Coupon findByIdOrElseThrow(Long eventId) {
-        return couponRepository.findById(eventId)
+    public Coupon findByIdOrElseThrow(Long couponId) {
+        return couponRepository.findById(couponId)
                 .orElseThrow(() -> new BadRequestException(ErrorMessage.EVENT_NOT_FOUND.getMessage()));
     }
 }

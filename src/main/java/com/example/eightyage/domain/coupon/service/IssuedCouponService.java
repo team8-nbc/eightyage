@@ -5,6 +5,7 @@ import com.example.eightyage.domain.coupon.entity.IssuedCoupon;
 import com.example.eightyage.domain.coupon.couponstate.CouponState;
 import com.example.eightyage.domain.coupon.repository.IssuedCouponRepository;
 import com.example.eightyage.domain.coupon.entity.Coupon;
+import com.example.eightyage.domain.coupon.status.Status;
 import com.example.eightyage.domain.user.entity.User;
 import com.example.eightyage.global.dto.AuthUser;
 import com.example.eightyage.global.exception.BadRequestException;
@@ -48,7 +49,7 @@ public class IssuedCouponService {
 
             Coupon coupon = couponService.getValidCouponOrThrow(eventId);
 
-            if (issuedCouponRepository.existsByUserIdAndEventId(authUser.getUserId(), eventId)) {
+            if (issuedCouponRepository.existsByUserIdAndCouponId(authUser.getUserId(), eventId)) {
                 throw new BadRequestException(ErrorMessage.COUPON_ALREADY_ISSUED.getMessage());
             }
 
@@ -76,27 +77,27 @@ public class IssuedCouponService {
 
     public Page<IssuedCouponResponseDto> getMyCoupons(AuthUser authUser, int page, int size) {
         Pageable pageable = PageRequest.of(page-1, size);
-        Page<IssuedCoupon> coupons = issuedCouponRepository.findAllByUserIdAndState(authUser.getUserId(), CouponState.VALID, pageable);
+        Page<IssuedCoupon> coupons = issuedCouponRepository.findAllByUserIdAndStatus(authUser.getUserId(), Status.VALID, pageable);
 
         return coupons.map(IssuedCoupon::toDto);
     }
 
-    public IssuedCouponResponseDto getCoupon(AuthUser authUser, Long couponId) {
-        IssuedCoupon issuedCoupon = findByIdOrElseThrow(couponId);
+    public IssuedCouponResponseDto getCoupon(AuthUser authUser, Long issuedCouponId) {
+        IssuedCoupon issuedCoupon = findByIdOrElseThrow(issuedCouponId);
 
         if(!issuedCoupon.getUser().equals(User.fromAuthUser(authUser))) {
             throw new ForbiddenException(ErrorMessage.COUPON_FORBIDDEN.getMessage());
         }
 
-        if(!issuedCoupon.getStatus().equals(CouponState.VALID)) {
+        if(issuedCoupon.getStatus().equals(Status.INVALID)) {
             throw new BadRequestException(ErrorMessage.COUPON_ALREADY_USED.getMessage());
         }
 
         return issuedCoupon.toDto();
     }
 
-    public IssuedCoupon findByIdOrElseThrow(Long couponId) {
-        return issuedCouponRepository.findById(couponId)
+    public IssuedCoupon findByIdOrElseThrow(Long issuedCouponId) {
+        return issuedCouponRepository.findById(issuedCouponId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.COUPON_NOT_FOUND.getMessage()));
     }
 }
