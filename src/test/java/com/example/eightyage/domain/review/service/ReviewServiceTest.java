@@ -137,7 +137,7 @@ class ReviewServiceTest {
         when(reviewRepository.findByProductIdAndProductDeletedAtIsNull(any(Long.class), eq(pageRequest))).thenReturn(reviewPage);
 
         // when
-        Page<ReviewsGetResponseDto> result = reviewService.findReviews(productId, pageRequest);
+        Page<ReviewsGetResponseDto> result = reviewService.getReviews(productId, pageRequest);
 
         // then
         assertNotNull(result);
@@ -183,6 +183,6 @@ class ReviewServiceTest {
         reviewService.deleteReview(userId, reviewId);
 
         // then
-        verify(review, times(1)).delete();
+        verify(reviewRepository, times(1)).delete(review);
     }
 }
