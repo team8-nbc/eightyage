@@ -43,6 +43,7 @@ public class Product extends TimeStamped {
     private List<Review> reviews = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true)
     private LocalDateTime deletedAt;
 
     @Builder

@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +72,7 @@ class ProductServiceTest {
         reviewList.add(review1);
         reviewList.add(review2);
 
-        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE, reviewList);
+        Product product = new Product(1L, "8자 주름 스킨", Category.SKINCARE, "8자 주름을 1자로 펴주는 퍼펙트 스킨", 20000, SaleState.FOR_SALE, reviewList, null);
 
         given(productRepository.findById(any(Long.class))).willReturn(Optional.of(product));
 
@@ -92,7 +93,7 @@ class ProductServiceTest {
         given(productRepository.findById(any(Long.class))).willReturn(Optional.of(product));
 
         // when
-        ProductGetResponseDto responseDto = productService.findProductById(productId);
+        ProductGetResponseDto responseDto = productService.getProductById(productId);
 
         // then
         assertThat(responseDto.getProductName()).isEqualTo(product.getName());
@@ -114,9 +115,7 @@ class ProductServiceTest {
         productService.deleteProduct(productId);
 
         // then
-        verify(review1, times(1)).delete();
-        verify(review2, times(1)).delete();
-
-        verify(product, times(1)).delete();
+        verify(reviewRepository, times(1)).deleteAll(reviewList);
+        verify(product, times(1)).deleteProduct();
     }
 }
