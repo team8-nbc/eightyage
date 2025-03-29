@@ -2,7 +2,6 @@ package com.example.eightyage.domain.coupon.service;
 
 import com.example.eightyage.domain.coupon.dto.response.IssuedCouponResponseDto;
 import com.example.eightyage.domain.coupon.entity.IssuedCoupon;
-import com.example.eightyage.domain.coupon.couponstate.CouponState;
 import com.example.eightyage.domain.coupon.repository.IssuedCouponRepository;
 import com.example.eightyage.domain.coupon.entity.Coupon;
 import com.example.eightyage.domain.coupon.status.Status;

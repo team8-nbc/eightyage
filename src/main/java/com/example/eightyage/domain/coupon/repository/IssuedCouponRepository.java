@@ -1,7 +1,6 @@
 package com.example.eightyage.domain.coupon.repository;
 
 import com.example.eightyage.domain.coupon.entity.IssuedCoupon;
-import com.example.eightyage.domain.coupon.couponstate.CouponState;
 import com.example.eightyage.domain.coupon.status.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
