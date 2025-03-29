@@ -7,6 +7,7 @@ import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
 import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.entity.Product;
+import com.example.eightyage.domain.product.repository.ProductImageRepository;
 import com.example.eightyage.domain.product.salestate.SaleState;
 import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.review.entity.Review;
@@ -34,6 +35,9 @@ class ProductServiceTest {
 
     @Mock
     ProductRepository productRepository;
+
+    @Mock
+    ProductImageRepository productImageRepository;
 
     @Mock
     ReviewRepository reviewRepository;
@@ -89,8 +93,13 @@ class ProductServiceTest {
     void 제품_단건_조회_성공(){
         // given
         Long productId = 1L;
+        List<String> productImageList = new ArrayList<>();
+
+        productImageList.add("image1.png");
+        productImageList.add("image2.png");
 
         given(productRepository.findById(any(Long.class))).willReturn(Optional.of(product));
+        given(productImageRepository.findProductImageByProductId(any(Long.class))).willReturn(productImageList);
 
         // when
         ProductGetResponseDto responseDto = productService.getProductById(productId);
