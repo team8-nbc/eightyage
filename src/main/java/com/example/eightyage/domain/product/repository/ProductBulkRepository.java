@@ -1,8 +1,8 @@
 package com.example.eightyage.domain.product.repository;
 
-import com.example.eightyage.domain.product.entity.Category;
+import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.entity.Product;
-import com.example.eightyage.domain.product.entity.SaleState;
+import com.example.eightyage.domain.product.salestate.SaleState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -1,7 +1,7 @@
 package com.example.eightyage.domain.product.repository;
 
 import com.example.eightyage.domain.product.dto.response.ProductSearchResponseDto;
-import com.example.eightyage.domain.product.entity.Category;
+import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

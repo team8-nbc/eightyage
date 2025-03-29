@@ -12,11 +12,6 @@ server:
 spring:
   config:
     import: optional:file:.env[.properties]
-  data:
-    redis:
-      host: localhost
-      port: 6379
-
 
   application:
     name: eightyage
@@ -36,6 +31,29 @@ spring:
         format_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
+
+#  cloud:
+#    aws:
+#      credentials:
+#        access-key: ${S3_ACCESS_KEY}
+#        secret-key: ${S3_SECRET_KEY}
+#      region:
+#        static: ap-northeast-2
+#      s3:
+#        bucket: ${S3_BUCKET}
+#
+#aws:
+#  credentials:
+#    access-key: ${S3_ACCESS_KEY}
+#    secret-key: ${S3_SECRET_KEY}
+#  region: ap-northeast-2
+#  s3:
+#    bucket: ${S3_BUCKET}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
 
 jwt:
   secret:
