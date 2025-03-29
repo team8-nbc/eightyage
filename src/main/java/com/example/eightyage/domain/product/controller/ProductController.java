@@ -6,7 +6,7 @@ import com.example.eightyage.domain.product.dto.response.ProductGetResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductSaveResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductSearchResponseDto;
 import com.example.eightyage.domain.product.dto.response.ProductUpdateResponseDto;
-import com.example.eightyage.domain.product.entity.Category;
+import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +46,8 @@ public class ProductController {
 
     // 제품 단건 조회
     @GetMapping("/v1/products/{productId}")
-    public ResponseEntity<ProductGetResponseDto> getProduct(@PathVariable Long productId){
-        ProductGetResponseDto responseDto = productService.findProductById(productId);
+    public ResponseEntity<ProductGetResponseDto> findProduct(@PathVariable Long productId){
+        ProductGetResponseDto responseDto = productService.getProductById(productId);
 
         return ResponseEntity.ok(responseDto);
     }
