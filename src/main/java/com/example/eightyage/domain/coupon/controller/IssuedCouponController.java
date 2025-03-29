@@ -16,9 +16,9 @@ public class IssuedCouponController {
 
     private final IssuedCouponService issuedCouponService;
 
-    @PostMapping("/v1/events/{eventId}/coupons")
-    public ResponseEntity<IssuedCouponResponseDto> issueCoupon(@AuthenticationPrincipal AuthUser authUser, @PathVariable Long eventId) {
-        return ResponseEntity.ok(issuedCouponService.issueCoupon(authUser, eventId));
+    @PostMapping("/v1/coupons/{couponId}/issues")
+    public ResponseEntity<IssuedCouponResponseDto> issueCoupon(@AuthenticationPrincipal AuthUser authUser, @PathVariable Long couponId) {
+        return ResponseEntity.ok(issuedCouponService.issueCoupon(authUser, couponId));
     }
 
     @GetMapping("/v1/coupons/my")
@@ -29,8 +29,8 @@ public class IssuedCouponController {
         return ResponseEntity.ok(issuedCouponService.getMyCoupons(authUser, page, size));
     }
 
-    @GetMapping("/v1/coupons/{couponId}")
-    public ResponseEntity<IssuedCouponResponseDto> getCoupon(@AuthenticationPrincipal AuthUser authUser, @PathVariable Long couponId) {
-        return ResponseEntity.ok(issuedCouponService.getCoupon(authUser, couponId));
+    @GetMapping("/v1/coupons/{issuedCouponId}")
+    public ResponseEntity<IssuedCouponResponseDto> getCoupon(@AuthenticationPrincipal AuthUser authUser, @PathVariable Long issuedCouponId) {
+        return ResponseEntity.ok(issuedCouponService.getCoupon(authUser, issuedCouponId));
     }
 }

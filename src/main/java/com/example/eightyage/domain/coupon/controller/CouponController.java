@@ -18,24 +18,24 @@ public class CouponController {
     private final CouponService couponService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/v1/events")
+    @PostMapping("/v1/coupons")
     public ResponseEntity<CouponResponseDto> createCoupon(@Valid @RequestBody CouponRequestDto couponRequestDto) {
         return ResponseEntity.ok(couponService.saveCoupon(couponRequestDto));
     }
 
-    @GetMapping("/v1/events")
+    @GetMapping("/v1/coupons")
     public ResponseEntity<Page<CouponResponseDto>> getCoupons(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(couponService.getCoupons(page, size));
     }
 
-    @GetMapping("/v1/events/{eventId}")
-    public ResponseEntity<CouponResponseDto> getCoupon(@PathVariable long eventId) {
-        return ResponseEntity.ok(couponService.getCoupon(eventId));
+    @GetMapping("/v1/coupons/{couponId}")
+    public ResponseEntity<CouponResponseDto> getCoupon(@PathVariable long couponId) {
+        return ResponseEntity.ok(couponService.getCoupon(couponId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/v1/events/{eventId}")
-    public ResponseEntity<CouponResponseDto> updateCoupon(@PathVariable long eventId, @Valid @RequestBody CouponRequestDto couponRequestDto) {
-        return ResponseEntity.ok(couponService.updateCoupon(eventId, couponRequestDto));
+    @PatchMapping("/v1/coupons/{couponId}")
+    public ResponseEntity<CouponResponseDto> updateCoupon(@PathVariable long couponId, @Valid @RequestBody CouponRequestDto couponRequestDto) {
+        return ResponseEntity.ok(couponService.updateCoupon(couponId, couponRequestDto));
     }
 }

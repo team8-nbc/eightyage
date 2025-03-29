@@ -34,9 +34,9 @@ public class IssuedCouponService {
     private static final String EVENT_LOCK_PREFIX = "event:lock:";
     private final RedissonClient redissonClient;
 
-    public IssuedCouponResponseDto issueCoupon(AuthUser authUser, Long eventId) {
+    public IssuedCouponResponseDto issueCoupon(AuthUser authUser, Long couponId) {
 
-        RLock rLock = redissonClient.getLock(EVENT_LOCK_PREFIX + eventId);
+        RLock rLock = redissonClient.getLock(EVENT_LOCK_PREFIX + couponId);
         boolean isLocked = false;
 
         try {
@@ -46,17 +46,17 @@ public class IssuedCouponService {
                 throw new BadRequestException(ErrorMessage.CAN_NOT_ACCESS.getMessage()); // 락 획득 실패
             }
 
-            Coupon coupon = couponService.getValidCouponOrThrow(eventId);
+            Coupon coupon = couponService.getValidCouponOrThrow(couponId);
 
-            if (issuedCouponRepository.existsByUserIdAndCouponId(authUser.getUserId(), eventId)) {
+            if (issuedCouponRepository.existsByUserIdAndCouponId(authUser.getUserId(), couponId)) {
                 throw new BadRequestException(ErrorMessage.COUPON_ALREADY_ISSUED.getMessage());
             }
 
-            Long remain = Long.parseLong(stringRedisTemplate.opsForValue().get(EVENT_QUANTITIY_PREFIX + eventId));
+            Long remain = Long.parseLong(stringRedisTemplate.opsForValue().get(EVENT_QUANTITIY_PREFIX + couponId));
             if (remain == 0 || remain < 0) {
                 throw new BadRequestException(ErrorMessage.COUPON_OUT_OF_STOCK.getMessage());
             }
-            stringRedisTemplate.opsForValue().decrement(EVENT_QUANTITIY_PREFIX + eventId);
+            stringRedisTemplate.opsForValue().decrement(EVENT_QUANTITIY_PREFIX + couponId);
 
             // 쿠폰 발급 및 저장
             IssuedCoupon issuedCoupon = IssuedCoupon.create(User.fromAuthUser(authUser), coupon);
