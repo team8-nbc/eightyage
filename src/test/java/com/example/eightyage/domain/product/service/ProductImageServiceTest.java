@@ -87,6 +87,6 @@ class ProductImageServiceTest {
         productImageService.deleteImage(imageId);
 
         // then
-        verify(productImage, times(1)).delete();
+        verify(productImageRepository, times(1)).delete(productImage);
     }
 }
