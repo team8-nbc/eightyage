@@ -1,5 +1,6 @@
 package com.example.eightyage.domain.product.service;
 
+import com.example.eightyage.domain.product.category.Category;
 import com.example.eightyage.domain.product.entity.Product;
 import com.example.eightyage.domain.product.entity.ProductImage;
 import com.example.eightyage.domain.product.repository.ProductImageRepository;
@@ -13,17 +14,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductImageServiceTest {
@@ -45,43 +45,53 @@ class ProductImageServiceTest {
 
     private MockMultipartFile mockFile;
 
+    private Product mockProduct;
+
     @BeforeEach
     void setUp(){
         mockFile = new MockMultipartFile(
                 "file",
-                "tesst.jpg",
+                "test.jpg",
                 "image/jpeg",
                 "test image content".getBytes()
         );
 
-        ReflectionTestUtils.setField(productImageService, "bucket", "test-bucket");
-        ReflectionTestUtils.setField(productImageService, "region", "us-west-2");
+        mockProduct = Product.builder()
+                .name("Test Product")
+                .category(Category.SKINCARE)
+                .content("This is test product.")
+                .price(10000)
+                .build();
+
+        ReflectionTestUtils.setField(mockProduct, "id", 1L);
     }
 
     @Test
-    void 이미지_업로드_성공(){
+    void 이미지_업로드_성공() {
         // given
         Long productId = 1L;
-        String bucket = "test-bucket";
-        String region = "us-west-2";
-        String expectedImageUrl = String.format("https://%s.s3.%s.amazonaws.com/", bucket, region);
+        given(productService.findProductByIdOrElseThrow(productId)).willReturn(mockProduct);
 
-        given(productImageRepository.save(any())).willReturn(productImage);
+        ProductImage mockProductImage = mock(ProductImage.class);
+        given(productImageRepository.save(any(ProductImage.class))).willReturn(mockProductImage);
+
+        when(s3Client.putObject(any(PutObjectRequest.class), any(RequestBody.class)))
+                .thenReturn(PutObjectResponse.builder().build());
 
         // when
         String imageUrl = productImageService.uploadImage(productId, mockFile);
 
         // then
-        assertTrue(imageUrl.startsWith(expectedImageUrl));
+        assertNotNull(imageUrl);
+        assertTrue(imageUrl.startsWith("https://my-gom-bucket.s3.ap-northeast-2.amazonaws.com/"));
     }
+
 
     @Test
     void 이미지_삭제_성공(){
         // given
         Long imageId = 1L;
-        String imageUrl = "imageUrl-example";
-
-        given(productImageRepository.findById(any())).willReturn(Optional.of(productImage));
+        given(productImageRepository.findById(imageId)).willReturn(Optional.of(productImage));
 
         // when
         productImageService.deleteImage(imageId);
