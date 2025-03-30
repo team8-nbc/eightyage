@@ -1,7 +1,6 @@
 package com.example.eightyage.domain.review.service;
 
 import com.example.eightyage.domain.product.entity.Product;
-import com.example.eightyage.domain.product.repository.ProductRepository;
 import com.example.eightyage.domain.product.service.ProductService;
 import com.example.eightyage.domain.review.dto.request.ReviewSaveRequestDto;
 import com.example.eightyage.domain.review.dto.request.ReviewUpdateRequestDto;
@@ -11,18 +10,18 @@ import com.example.eightyage.domain.review.dto.response.ReviewsGetResponseDto;
 import com.example.eightyage.domain.review.entity.Review;
 import com.example.eightyage.domain.review.repository.ReviewRepository;
 import com.example.eightyage.domain.user.entity.User;
-import com.example.eightyage.domain.user.userrole.UserRole;
-import com.example.eightyage.domain.user.repository.UserRepository;
 import com.example.eightyage.domain.user.service.UserService;
+import com.example.eightyage.domain.user.userrole.UserRole;
 import com.example.eightyage.global.exception.UnauthorizedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
-import org.springframework.data.domain.*;
-import org.springframework.data.querydsl.QPageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
