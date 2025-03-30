@@ -84,3 +84,39 @@ jobs:
             done
             echo "❌ Health check failed after multiple attempts"
             exit 1
+
+      - name: Notify Slack - 배포 성공
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "text": "✅ *배포 성공!* 🎉",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*✅ 배포 성공했습니다!*\n\n*브랜치:* `${{ github.ref_name }}`\n<http://3.39.158.229:8080/actuator/health|🔗 배포된 서비스 상태 보기>"
+                }
+              }
+            ]
+          }' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack - 배포 실패
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "text": "❌ *배포 실패!* 🔥",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*❌ 배포 실패했습니다!*\n\n*브랜치:* `${{ github.ref_name }}`\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|🔗 실패 로그 확인하기>"
+                }
+              }
+            ]
+          }' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
