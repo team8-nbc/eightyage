@@ -9,6 +9,7 @@ server:
     session:
       timeout: 1800
 
+spring:
   application:
     name: eightyage
 
@@ -25,4 +26,3 @@ server:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
-
