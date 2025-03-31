@@ -129,7 +129,10 @@
 - AWS ECR을 통한 Docker 이미지 관리 및 EC2 배포
 - ElastiCache(Redis)를 이용한 인기 검색어 및 쿠폰 캐싱 처리
 
-## 💡기술적 고도화
+## ✅ Health Check
+[🔗배포된 서비스 상태 보기](https://eightyage.site/actuator/health)
+
+## 💡 기술적 고도화
 
 <details>
 <summary><strong>인덱스 적용으로 응답속도 8.29배 개선</strong></summary>
