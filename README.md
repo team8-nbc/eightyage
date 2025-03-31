@@ -1,8 +1,13 @@
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&gradientColor=FFB6C1,E6E6FA,FFFACD&height=200&section=header&text=Welcome%20to%20Eighty%20-%20Age%20!&fontSize=40&fontAlign=50&fontColor=ffffff&animation=fadeIn" />
+
+
+
 # 💄 플러스 프로젝트 - 화장품 조회 및 쿠폰 발급 애플리케이션
 
 ![Java](https://img.shields.io/badge/Java-17-blue?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.4-green?style=for-the-badge&logo=springboot&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-orange?style=for-the-badge&logo=mysql&logoColor=white)
+![Redisson](https://img.shields.io/badge/Redisson-Distributed%20Lock-%23FF2B2B?style=for-the-badge)
 ![ElastiCache](https://img.shields.io/badge/AWS%20ElastiCache-Redis-%23232F3E?style=for-the-badge&logo=redis&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-EC2|S3|RDS-%23FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI/CD-%232671E5?style=for-the-badge&logo=githubactions&logoColor=white)
@@ -17,42 +22,41 @@
 
 ## 🎯 프로젝트 핵심 목표
 1. **성능 최적화**
-   - Redis 기반 캐싱으로 실시간 상품 조회 성능을 향상한다.
+    - Redis 기반 캐싱 및 인덱스 튜닝을 통해 실시간 상품 조회 및 인기 검색어 응답 속도 개선
 
 2. **동시성 제어**
-   - Kafka를 이용한 SAGA 패턴으로 분산 트랜잭션 관리.
-   - 중복 및 데이터 손실을 방지하는 Kafka Batch Listener 구현.
+    - Redisson 기반 분산 락으로 쿠폰 발급 시 중복 방지 및 트랜잭션 안정성 확보
 
 3. **운영 및 배포 효율화**
-   - Docker와 Github Actions를 이용한 CI/CD 파이프라인 구축으로 배포 자동화.
-   - Prometheus와 Grafana를 활용한 실시간 모니터링으로 시스템 안정성 확보.
+    - GitHub Actions와 Docker를 활용한 CI/CD 구축
+    - AWS 인프라(ECR, EC2, RDS, S3, ElastiCache) 기반의 자동화 배포 환경 구성
 
 ---
 
 ## 💡 주요 기능
 
-| 도메인 | 기능 | 설명 |
-|--------|------|------|
+| 도메인 | 기능 | 설명                                |
+|--------|------|-----------------------------------|
 | 👤 회원 | 회원가입 | 사용자(User/Admin) 구분 등록, 비밀번호 정책 적용 |
-| 👤 회원 | 로그인 | JWT 발급 및 인증 처리 |
-| 👤 회원 | 회원정보 수정 | 비밀번호 확인 후 닉네임 등 정보 수정 |
-| 👤 회원 | 회원탈퇴 | 비밀번호 재확인 후 Soft Delete 처리 |
-| 🖼 이미지 | 이미지 업로드 | S3에 저장 후 URL 반환, 제품/프로필 이미지 공통 처리 |
-| 🧴 제품 | 제품 생성 | 관리자 권한으로 제품 등록 |
-| 🧴 제품 | 제품 수정 / 삭제 | 제품 정보 및 이미지 수정/삭제 |
-| 🧴 제품 | 제품 단건 조회 | ID 기반 상세 정보 조회 |
-| 🧴 제품 | 제품 리스트 조회 | 전체 또는 필터 조건에 따른 리스트 반환 |
-| 🧴 제품 | 제품 이미지 추가/삭제 | 제품에 다중 이미지 추가 및 삭제 기능 |
-| 🔍 검색 | 제품 검색 | 키워드, 카테고리, 정렬 조건 기반 검색 |
-| 🔍 검색 | 인기 검색어 | 일정 기간 내 가장 많이 검색된 키워드 Top-N 제공 |
-| 🔍 검색 | 급상승 검색어 | 최근 검색량 급증한 키워드 자동 집계 |
-| 📝 리뷰 | 리뷰 작성 | 구매한 유저에 한해 평점 및 코멘트 등록 |
-| 📝 리뷰 | 리뷰 수정 / 삭제 | 본인이 작성한 리뷰 수정 및 삭제 가능 |
-| 📝 리뷰 | 제품별 리뷰 조회 | 제품 상세 페이지 내 리뷰 리스트 제공 |
-| 🎟 쿠폰 | 쿠폰 생성 / 수정 | 관리자만 등록 가능, 수량 및 유효기간 포함 |
-| 🎟 쿠폰 | 쿠폰 조회 | 전체 쿠폰 또는 상태별 필터링 지원 |
-| 🎟 쿠폰 | 쿠폰 단건 조회 | 사용 가능한 쿠폰 단건 정보 반환 |
-| 🎟 쿠폰 | 쿠폰 담기 | 사용자 요청 시 사용 조건 만족하면 발급 |
+| 👤 회원 | 로그인 | JWT 발급 및 인증 처리                    |
+| 👤 회원 | 회원정보 수정 | 비밀번호 확인 후 닉네임 등 정보 수정             |
+| 👤 회원 | 회원탈퇴 | 비밀번호 재확인 후 Soft Delete 처리         |
+| 🖼 이미지 | 이미지 업로드 | S3에 저장 후 URL 반환                   |
+| 🧴 제품 | 제품 생성 | 관리자 권한으로 제품 등록                    |
+| 🧴 제품 | 제품 수정 / 삭제 | 제품 정보 및 이미지 수정/삭제                 |
+| 🧴 제품 | 제품 단건 조회 | ID 기반 상세 정보 조회                    |
+| 🧴 제품 | 제품 리스트 조회 | 전체 또는 필터 조건에 따른 리스트 반환            |
+| 🧴 제품 | 제품 이미지 추가/삭제 | 제품에 다중 이미지 추가 및 삭제 기능             |
+| 🔍 검색 | 제품 검색 | 키워드, 카테고리, 정렬 조건 기반 검색            |
+| 🔍 검색 | 인기 검색어 | 일정 기간 내 가장 많이 검색된 키워드 Top-N 제공    |
+| 🔍 검색 | 급상승 검색어 | 최근 검색량 급증한 키워드 자동 집계              |
+| 📝 리뷰 | 리뷰 작성 | 구매한 유저에 한해 평점 및 코멘트 등록            |
+| 📝 리뷰 | 리뷰 수정 / 삭제 | 본인이 작성한 리뷰 수정 및 삭제 가능             |
+| 📝 리뷰 | 제품별 리뷰 조회 | 제품 상세 페이지 내 리뷰 리스트 제공             |
+| 🎟 쿠폰 | 쿠폰 생성 / 수정 | 관리자만 등록 가능, 수량 및 유효기간 포함          |
+| 🎟 쿠폰 | 쿠폰 조회 | 전체 쿠폰 또는 상태별 필터링 지원               |
+| 🎟 쿠폰 | 쿠폰 단건 조회 | 사용 가능한 쿠폰 단건 정보 반환                |
+| 🎟 쿠폰 | 쿠폰 담기 | 사용자 요청 시 사용 조건 만족하면 발급            |
 
 ## 🛠️ 기술 스택
 
@@ -234,11 +238,10 @@ List<Review> findReviewsByProductId(@Param("productId") Long productId);
 
 ## ⚠️ 트러블 슈팅 모음
 
-- [🛠️ GitHub Actions 기반 CD 실전 트러블슈팅: EC2, ECR, ElastiCache](https://velog.io/@3uomlkh/GitHub-Actions-%EA%B8%B0%EB%B0%98-CD-%EC%8B%A4%EC%A0%84-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88)
+- [🛠️ GitHub Actions 기반 CD 실전 트러블슈팅: EC2, ECR, ElastiCache](https://velog.io/@3uomlkh/GitHub-Actions-%EA%B8%B0%EB%B0%98-CD-%EC%8B%A4%EC%A0%84-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85)
 - [쿠폰 발급 시스템에서의 분산락 사용](https://velog.io/@siha_014/%EC%BF%A0%ED%8F%B0-%EB%B0%9C%EA%B8%89-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%97%90%EC%84%9C%EC%9D%98-%EB%B6%84%EC%82%B0%EB%9D%BD-%EC%82%AC%EC%9A%A9)
 - [인덱스를 이용하여 쿼리를 최적화 하기](https://queenriwon3.tistory.com/145)
 - [트러블 슈팅: N + 1 문제](https://velog.io/@cock321/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%94%8C%EB%9F%AC%EC%8A%A4-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-N-1-%EB%AC%B8%EC%A0%9C)
-- [트러블 슈팅: N + 1 문제](https://velog.io/@cock321/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%94%8C%EB%9F%AC%EC%8A%A4-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-%ED%85%8C%EC%8A%A4%ED%8A%B8)
 - [트러블 슈팅: 테스트](https://velog.io/@cock321/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%94%8C%EB%9F%AC%EC%8A%A4-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-%ED%85%8C%EC%8A%A4%ED%8A%B8)
 - [인기 검색어 구현 Redis 설정 및 문제 해결하기](https://dev-leonie.tistory.com/76)
 ---
